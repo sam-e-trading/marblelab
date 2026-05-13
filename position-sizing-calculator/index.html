@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Position Sizing Calculator — Marble Lab</title>
+  <meta name="description" content="A modern objective-based position sizing calculator for estimating 1R, expected return, expectancy, and drawdown." />
+  <meta property="og:title" content="Position Sizing Calculator" />
+  <meta property="og:description" content="Estimate risk per trade, expected return, expectancy, and Monte Carlo drawdown from your trading objectives." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a href="../">← Marble Lab</a>
+      <span>Educational only · Not financial advice</span>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Objective-based risk sizing</p>
+        <h1>Position Sizing Calculator</h1>
+        <p class="lede">Estimate your 1R dollar risk, expected return, expectancy, and likely drawdown from a system’s objectives. Useful for finding the trade size that fits the goal without quietly inviting ruin to dinner.</p>
+      </div>
+      <div class="score-card">
+        <span>1R risk amount</span>
+        <strong id="one-r">$1,000</strong>
+        <small id="risk-summary">1.00% of $100,000</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="panel-head">
+          <h2>Inputs</h2>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+
+        <label>Trading capital
+          <input id="capital" type="number" min="100" max="100000000" step="1000" value="100000" />
+        </label>
+
+        <label>Number of trades
+          <input id="trades" type="number" min="1" max="1000" step="1" value="100" />
+        </label>
+
+        <label>Win rate: <strong id="win-rate-label">50%</strong>
+          <input id="win-rate" type="range" min="1" max="99" step="1" value="50" />
+        </label>
+
+        <label>Risk / reward ratio
+          <input id="risk-reward" type="number" min="0.1" max="20" step="0.1" value="3" />
+        </label>
+
+        <label>Risk per trade: <strong id="risk-label">1.00%</strong>
+          <input id="risk-per-trade" type="range" min="0.1" max="20" step="0.1" value="1" />
+        </label>
+
+        <label>Monte Carlo runs
+          <input id="simulations" type="number" min="100" max="10000" step="100" value="2000" />
+        </label>
+
+        <button id="calculate">Recalculate</button>
+        <p class="note">This uses fixed-fraction objectives and a simplified Monte Carlo drawdown estimate. Real markets contain slippage, correlation, changing volatility, liquidity, execution nonsense, and other little goblins.</p>
+      </aside>
+
+      <section class="panel dashboard">
+        <div class="stats">
+          <article><span id="return-percentage">+100.0%</span><small>expected return</small></article>
+          <article><span id="expectancy-r">+1.00R</span><small>expectancy</small></article>
+          <article><span id="expectancy-cash">$1,000</span><small>expectancy / trade</small></article>
+          <article><span id="drawdown-p95">0.0%</span><small>p95 max drawdown</small></article>
+        </div>
+
+        <div class="result-strip">
+          <div>
+            <p class="eyebrow">Readout</p>
+            <strong id="readout">This setup has positive expectancy. Now check whether the drawdown is survivable.</strong>
+          </div>
+          <div>
+            <p class="eyebrow">Suggested workflow</p>
+            <strong>Change risk per trade until expected return and drawdown both fit your objectives.</strong>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-wrap">
+            <h3>Example equity curve</h3>
+            <canvas id="equity-chart" width="760" height="300" aria-label="Example equity curve"></canvas>
+          </div>
+          <div class="chart-wrap">
+            <h3>Monte Carlo drawdown distribution</h3>
+            <canvas id="drawdown-chart" width="760" height="300" aria-label="Monte Carlo drawdown distribution"></canvas>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel explainer">
+      <h2>How to use it</h2>
+      <ol>
+        <li>Enter your capital, trade sample size, win rate, and risk/reward.</li>
+        <li>Adjust <strong>risk per trade</strong> until the expected return is close to your objective.</li>
+        <li>Check the estimated drawdown. If it is too high, reduce risk per trade. Annoying, yes. Usually wise.</li>
+        <li>Your <strong>1R risk amount</strong> is the dollar amount to use when calculating live trade size from stop distance.</li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span>Marble Lab · Position Sizing Calculator</span>
+      <span>Free educational tool · Runs locally in your browser</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

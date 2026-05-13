@@ -5,6 +5,7 @@ Small practical trading tools and experiments from MarketMates.
 ## Tools
 
 - `/position-sizing/` — Position Sizing Game, a browser-based simulator for position sizing, expectancy, drawdown, and risk behaviour.
+- `/position-sizing-calculator/` — Position Sizing Calculator, an objective-based calculator for 1R, expected return, expectancy, and drawdown.
 
 ## Deploy
 
@@ -22,3 +23,7 @@ Then add the custom domain:
 Position Sizing Game will be available at:
 
 `https://marblelab.marketmates.com/position-sizing/`
+
+The Position Sizing Calculator will be available at:
+
+`https://marblelab.marketmates.com/position-sizing-calculator/`
