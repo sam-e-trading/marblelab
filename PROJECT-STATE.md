@@ -1,0 +1,177 @@
+# Marble Lab — Project State
+
+Last updated: 2026-05-13
+
+## What this is
+
+Marble Lab is a MarketMates tools vertical for simple, visual trading risk/growth education tools.
+
+Tone: practical, clear, visual, lightly wry. Avoid overbuilding. No spreadsheet goblin nests.
+
+## Locations
+
+- Local repo: `~/ .openclaw/workspace/marblelab/` (workspace-relative: `marblelab/`)
+- GitHub: https://github.com/sam-e-trading/marblelab
+- Cloudflare Pages preview: https://marblelab.pages.dev
+- Intended custom domain: https://marblelab.marketmates.com
+
+## Deployment
+
+Cloudflare Pages pulls from GitHub repo `sam-e-trading/marblelab`.
+
+Build settings:
+
+- Framework preset: `None`
+- Build command: blank
+- Output directory: `/`
+- Production branch: `main`
+
+Known pending task: connect `marblelab.marketmates.com` once Sam has the required MarketMates password/access.
+
+## Current tools
+
+### `/position-sizing/` — Position Sizing Game
+
+Interactive R-multiple / risk sizing game.
+
+Features:
+
+- system presets
+- custom win probability, average win R, average loss R
+- trade count
+- starting equity
+- risk per trade
+- take next trade / auto-run
+- equity curve
+- trade log
+- copy result
+- Marble Lab back link
+
+### `/position-sizing-calculator/` — Position Sizing Calculator
+
+Modernised from Sam’s older MarketMates lesson-page calculator.
+
+Features:
+
+- trading capital
+- number of trades
+- win rate
+- risk/reward
+- risk per trade
+- Monte Carlo runs
+- 1R dollar amount
+- expected return
+- expectancy in R and cash
+- p95 max drawdown
+- example equity curve
+- drawdown distribution
+
+### `/compounding-returns/` — Compounding Returns Calculator
+
+Trader-focused growth path modeller.
+
+Features:
+
+- starting capital
+- years / extra months
+- average monthly return
+- monthly volatility
+- max losing month %
+- max winning month %
+- monthly contribution / withdrawal
+- simulation paths
+- compounding model selector:
+  - fully compounded
+  - simple / non-compounded
+  - fixed base
+- generate new path
+- smooth ending balance
+- median / p10 / p90 ending balances
+- p95 max drawdown
+- chance below starting capital
+- generated monthly returns bar chart
+- compounding impact path
+- ending balance distribution
+- month-by-month compounding impact table
+- right-aligned tooltip definitions
+
+### `/drawdown-recovery/` — Drawdown Recovery Calculator
+
+Simple visual recovery maths tool.
+
+Features:
+
+- drawdown slider
+- optional starting balance
+- required recovery return headline
+- starting balance / after drawdown / dollar loss / profit needed
+- before/drawdown/recovery bar chart
+- recovery curve
+- quick reference graphic for 10%, 20%, 30%, 40%, 50%, 60% drawdowns
+- tooltip definitions
+
+Formula:
+
+```text
+recovery % = drawdown / (1 - drawdown)
+```
+
+## Supporting docs
+
+Briefs live in `marblelab/docs/`, including:
+
+- `compounding-returns-calculator-brief.md`
+- `compounding-returns-monthly-path-v2-brief.md`
+- `drawdown-recovery-tool-brief.md`
+
+## Brand / wording guidance
+
+Use MarketMates/Marble Lab framing.
+
+It is okay for tools to be inspired by classic trading risk education concepts such as R-multiples, expectancy, position sizing, and drawdown recovery maths.
+
+Avoid implying affiliation with Van Tharp, Van Tharp Institute, or proprietary “Tharp Think” branding.
+
+Good public phrasing:
+
+- “classic position-sizing concepts”
+- “risk education”
+- “educational simulator”
+- “not financial advice”
+
+Avoid:
+
+- claiming endorsement
+- copying proprietary course language
+- presenting tools as trading systems
+
+## Mission Control
+
+Marble Lab is tracked as a vertical in `mission-control/state/*`.
+
+When adding tools or major changes, update:
+
+- `mission-control/state/tasks.json`
+- `mission-control/state/watchlist.json`
+- `mission-control/state/decisions.json` when it is a real decision
+- `MEMORY.md` for durable cross-session memory if the change matters long-term
+
+## Quick verification commands
+
+From `marblelab/`:
+
+```bash
+node --check position-sizing/app.js
+node --check position-sizing-calculator/app.js
+node --check compounding-returns/app.js
+node --check drawdown-recovery/app.js
+python3 -m http.server 8770
+```
+
+Local URLs:
+
+- http://127.0.0.1:8770/
+- http://127.0.0.1:8770/position-sizing/
+- http://127.0.0.1:8770/position-sizing-calculator/
+- http://127.0.0.1:8770/compounding-returns/
+- http://127.0.0.1:8770/drawdown-recovery/
