@@ -109,7 +109,7 @@ function summaryText() {
   const ret = ((state.equity / state.startEquity - 1) * 100);
   const winRate = trades ? ((state.wins / trades) * 100).toFixed(1) : '0.0';
   return [
-    'Position Sizing Lab result',
+    'Position Sizing Game result',
     `System: ${state.system.name}`,
     `Trades: ${trades}/${state.tradeLimit}`,
     `Risk per trade: ${Number(el('risk').value).toFixed(2)}%`,

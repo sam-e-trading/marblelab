@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for wanting to improve Position Sizing Lab.
+Thanks for wanting to improve Position Sizing Game.
 
 ## Good contributions
 

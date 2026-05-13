@@ -1,4 +1,4 @@
-# Position Sizing Lab
+# Position Sizing Game
 
 A free, dependency-free trading-risk simulator for learning position sizing, expectancy, drawdown, and risk of ruin.
 
