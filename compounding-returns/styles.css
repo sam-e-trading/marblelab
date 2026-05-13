@@ -31,11 +31,13 @@ h3 { margin: 0 0 10px; color: var(--honest-green); font-size: .95rem; }
 .panel-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 16px; }
 label { display: grid; gap: 8px; color: var(--honest-green); font-weight: 800; margin-bottom: 16px; }
 .input-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-input { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 12px 13px; background: rgba(0,0,0,.24); color: var(--white); }
+input, select { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 12px 13px; background: rgba(0,0,0,.24); color: var(--white); }
 input[type="range"] { accent-color: var(--fresh-green); padding: 0; }
 button { border: 0; border-radius: 14px; padding: 12px 14px; background: var(--fresh-green); color: var(--trust-black); font-weight: 900; cursor: pointer; }
 button:hover { filter: brightness(1.04); transform: translateY(-1px); }
+button.secondary { background: var(--friendly-purple); }
 button.ghost { background: transparent; color: var(--white); border: 1px solid var(--border); }
+.button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .note { color: var(--muted); line-height: 1.45; margin: 18px 0 0; font-size: .9rem; }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
 .stats article { border: 1px solid var(--border); background: rgba(255,255,255,.045); border-radius: 20px; padding: 16px; }
@@ -45,12 +47,22 @@ button.ghost { background: transparent; color: var(--white); border: 1px solid v
 .result-strip > div { border-radius: 18px; border: 1px solid var(--border); background: rgba(255,255,255,.045); padding: 16px; }
 .result-strip strong { color: var(--white); line-height: 1.4; }
 .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.full-width { grid-column: 1 / -1; }
 .chart-wrap { border: 1px solid var(--border); border-radius: 22px; background: rgba(0,0,0,.18); padding: 14px; overflow: hidden; }
 canvas { display: block; width: 100%; height: auto; }
+.monthly-panel { margin-bottom: 18px; }
+.pill { border: 1px solid var(--border); border-radius: 999px; padding: 7px 10px; color: var(--honest-green); background: rgba(255,255,255,.045); font-size: .85rem; font-weight: 900; }
+.monthly-table { display: grid; gap: 8px; max-height: 440px; overflow: auto; padding-right: 4px; }
+.monthly-row { display: grid; grid-template-columns: 70px 90px repeat(4, minmax(120px, 1fr)); gap: 8px; align-items: center; border: 1px solid var(--border); border-radius: 14px; padding: 10px; background: rgba(255,255,255,.04); }
+.monthly-row.header { position: sticky; top: 0; z-index: 1; background: rgba(28,37,43,.96); color: var(--honest-green); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 900; }
+.monthly-row span { color: var(--muted); }
+.monthly-row strong { color: var(--white); }
+.monthly-row .positive { color: var(--fresh-green); }
+.monthly-row .negative { color: var(--bold-orange); }
 .explainer { margin-top: 18px; }
 .explainer ol { margin: 14px 0 0; padding-left: 1.25rem; }
 .explainer li { color: var(--muted); line-height: 1.6; margin: 8px 0; }
 .explainer strong { color: var(--white); }
 .footer { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; color: var(--muted); padding: 20px 4px 0; font-size: .9rem; }
-@media (max-width: 1000px) { .hero, .grid, .chart-grid, .result-strip { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 540px) { .stats, .input-pair { grid-template-columns: 1fr; } .shell { width: min(100% - 20px, 1360px); } }
+@media (max-width: 1000px) { .hero, .grid, .chart-grid, .result-strip { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr 1fr; } .monthly-row { grid-template-columns: 1fr 1fr; } .monthly-row.header { display: none; } }
+@media (max-width: 540px) { .stats, .input-pair, .button-row { grid-template-columns: 1fr; } .shell { width: min(100% - 20px, 1360px); } }

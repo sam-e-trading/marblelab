@@ -66,7 +66,18 @@
           <input id="simulations" type="number" min="100" max="10000" step="100" value="2000" />
         </label>
 
-        <button id="calculate">Recalculate</button>
+        <label>Compounding model
+          <select id="model">
+            <option value="compound">Fully compounded · returns apply to current balance</option>
+            <option value="simple">Simple / non-compounded · returns apply to starting capital</option>
+            <option value="fixed-base">Fixed base · returns apply to original account size</option>
+          </select>
+        </label>
+
+        <div class="button-row">
+          <button id="calculate">Recalculate</button>
+          <button id="generate-path" class="secondary">Generate new path</button>
+        </div>
         <p class="note">Variable mode samples monthly returns from a simple bounded distribution. Useful for learning; not a crystal ball, sadly.</p>
       </aside>
 
@@ -90,8 +101,12 @@
         </div>
 
         <div class="chart-grid">
+          <div class="chart-wrap full-width">
+            <h3>Generated monthly returns</h3>
+            <canvas id="returns-chart" width="1540" height="280" aria-label="Generated monthly returns bar chart"></canvas>
+          </div>
           <div class="chart-wrap">
-            <h3>Smooth vs median growth path</h3>
+            <h3>Compounding impact path</h3>
             <canvas id="growth-chart" width="760" height="300" aria-label="Smooth and simulated growth paths"></canvas>
           </div>
           <div class="chart-wrap">
@@ -102,12 +117,21 @@
       </section>
     </section>
 
+    <section class="panel monthly-panel">
+      <div class="panel-head">
+        <h2>Month-by-month compounding impact</h2>
+        <span id="model-summary" class="pill">Fully compounded</span>
+      </div>
+      <div id="monthly-table" class="monthly-table" aria-label="Monthly compounding impact table"></div>
+    </section>
+
     <section class="panel explainer">
       <h2>How to use it</h2>
       <ol>
         <li>Start with the smooth monthly return to see the idealised growth path.</li>
         <li>Add monthly volatility to see a more realistic range of outcomes.</li>
         <li>Use contributions or withdrawals to model adding capital or taking profits.</li>
+        <li>Use the same monthly return sequence across compounding models to see how negative months change the path.</li>
         <li>Compare the median, p10, p90, and drawdown numbers before trusting the pretty curve.</li>
       </ol>
     </section>
