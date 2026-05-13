@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Build a Marble Lab tool for MarketMates lesson #2, "Mastering Statistics and Probabilities for Traders." The tool helps traders see that an edge comes from the combination of win rate, average win size, average loss size, and execution over a sample of trades.
+Build a standalone Marble Lab tool that helps traders see that an edge comes from the combination of win rate, average win size, average loss size, and execution over a sample of trades.
 
 ## Route
 
@@ -12,10 +12,9 @@ Build a Marble Lab tool for MarketMates lesson #2, "Mastering Statistics and Pro
 
 Edge Simulator
 
-## Lesson concepts supported
+## Concepts supported
 
 - Trading edge as a statistical advantage over time.
-- Casino / lucky-dip framing: each trade is one draw from a distribution of possible R outcomes.
 - High win rate does not automatically mean profitability.
 - Payoff profile matters: average win versus average loss.
 - R-multiples as a cleaner way to compare trades and strategies.
@@ -42,7 +41,7 @@ Edge Simulator
 - Expected dollar result per month based on risk % and starting balance
 - Break-even win rate for the current average win/loss profile
 - Positive / negative / break-even edge status
-- Comparison against the lesson examples:
+- Comparison against example strategies:
   - 90% win rate, +0.1R average win, -1R average loss
   - 60% win rate, +1.5R average win, -1R average loss
   - 30% win rate, +5R average win, -1R average loss

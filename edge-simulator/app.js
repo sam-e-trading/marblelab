@@ -4,7 +4,7 @@ const signedMoney = value => `${value >= 0 ? '+' : '-'}${money(Math.abs(value))}
 const signedR = value => `${value >= 0 ? '+' : ''}${value.toFixed(2)}R`;
 const pct = value => `${value.toFixed(1)}%`;
 
-const lessonStrategies = [
+const comparisonStrategies = [
   { name: '90% small win', winRate: 90, avgWin: 0.1, avgLoss: 1, trades: 10, description: '+$10 wins, -$100 losses' },
   { name: '60% medium win', winRate: 60, avgWin: 1.5, avgLoss: 1, trades: 10, description: '+$150 wins, -$100 losses' },
   { name: '30% large win', winRate: 30, avgWin: 5, avgLoss: 1, trades: 10, description: '+$500 wins, -$100 losses' }
@@ -59,16 +59,6 @@ function readoutFor(edge, winRate, breakEven) {
   return `This setup is roughly break-even before costs. After spread, slippage, and mistakes, flat math usually becomes expensive.`;
 }
 
-function trapCopy(winRate, avgWin, avgLoss) {
-  if (winRate >= 75 && avgWin < avgLoss) {
-    return 'This is the classic high-win-rate trap: lots of small pats on the back, then a few losses eat the plate.';
-  }
-  if (winRate <= 40 && avgWin > avgLoss * 2) {
-    return 'This profile loses often by design. The discipline test is surviving the losing runs long enough to catch the larger winners.';
-  }
-  return 'A strategy needs enough winners and big enough winners. Win rate alone is just one ticket in the bowl.';
-}
-
 function drawStrategyChart(canvas, userProfile) {
   const ctx = canvas.getContext('2d');
   const w = canvas.width, h = canvas.height, pad = 38;
@@ -77,7 +67,7 @@ function drawStrategyChart(canvas, userProfile) {
   ctx.fillRect(0, 0, w, h);
 
   const bars = [
-    ...lessonStrategies.map(strategy => ({
+    ...comparisonStrategies.map(strategy => ({
       label: strategy.name,
       value: expectancyR(strategy.winRate, strategy.avgWin, strategy.avgLoss) * strategy.trades,
       color: strategy.winRate === 90 ? '#FF5C00' : '#CFFC54'
@@ -216,7 +206,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 }
 
 function renderStrategyCards() {
-  el('strategy-cards').innerHTML = lessonStrategies.map(strategy => {
+  el('strategy-cards').innerHTML = comparisonStrategies.map(strategy => {
     const edge = expectancyR(strategy.winRate, strategy.avgWin, strategy.avgLoss);
     const monthly = edge * strategy.trades;
     const result = monthly * 100;
@@ -254,7 +244,6 @@ function calculate() {
   el('monthly-r').classList.toggle('negative', monthlyR < 0);
   el('monthly-cash').classList.toggle('negative', monthlyCash < 0);
   el('readout').textContent = readoutFor(edge, inputs.winRate, breakEven);
-  el('win-rate-trap').textContent = trapCopy(inputs.winRate, inputs.avgWin, inputs.avgLoss);
 
   drawStrategyChart(el('strategy-chart'), { monthlyR });
   drawEquityChart(el('equity-chart'), inputs);

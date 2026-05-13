@@ -8,7 +8,7 @@ Small practical trading tools and experiments from MarketMates.
 - `/position-sizing-calculator/` — Position Sizing Calculator, an objective-based calculator for 1R, expected return, expectancy, and drawdown.
 - `/compounding-returns/` — Compounding Returns Calculator, a trader-focused growth path modeller with smooth returns, variable monthly simulations, percentile outcomes, and drawdown estimates.
 - `/drawdown-recovery/` — Drawdown Recovery Calculator, a simple visual tool showing the return required to recover from drawdowns.
-- `/edge-simulator/` — Edge Simulator, a lesson #2 probability tool for testing win rate, payoff, R-multiples, expectancy, and simulated equity paths.
+- `/edge-simulator/` — Edge Simulator, a probability tool for testing win rate, payoff, R-multiples, expectancy, and simulated equity paths.
 
 ## Deploy
 

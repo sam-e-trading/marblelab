@@ -57,7 +57,7 @@ button.ghost { background: transparent; color: var(--white); border: 1px solid v
 .stats span { display: block; color: var(--fresh-green); font-size: 1.2rem; font-weight: 900; overflow-wrap: anywhere; }
 .stats small { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
 .stats .negative { color: var(--bold-orange); }
-.result-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.result-strip { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
 .result-strip > div { border-radius: 18px; border: 1px solid var(--border); background: rgba(255,255,255,.045); padding: 16px; }
 .result-strip strong { color: var(--white); line-height: 1.4; }
 .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }

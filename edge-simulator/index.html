@@ -21,7 +21,7 @@
       <div>
         <p class="eyebrow">Probabilities for traders</p>
         <h1>Edge Simulator</h1>
-        <p class="lede">Test whether a strategy actually has positive expectancy. High win rates feel tidy, but the payoff profile decides whether the lucky dip has good tickets in it.</p>
+        <p class="lede">Explore how win rate, average win, average loss, trade frequency, and position size combine into positive or negative expectancy.</p>
       </div>
       <div class="score-card" id="status-card">
         <span>Edge status</span>
@@ -90,16 +90,12 @@
             <p class="eyebrow">Readout</p>
             <strong id="readout">This setup has positive expectancy. The question is whether you can execute enough trades for the math to show up.</strong>
           </div>
-          <div>
-            <p class="eyebrow">Win-rate trap</p>
-            <strong id="win-rate-trap">A lower win rate can still win if the average winner is large enough to pay for the losses.</strong>
-          </div>
         </div>
 
         <div class="chart-grid">
           <div class="chart-wrap">
-            <h3>Lesson strategy comparison</h3>
-            <canvas id="strategy-chart" width="760" height="330" aria-label="Comparison of three lesson strategies"></canvas>
+            <h3>Strategy comparison</h3>
+            <canvas id="strategy-chart" width="760" height="330" aria-label="Comparison of example strategies"></canvas>
           </div>
           <div class="chart-wrap">
             <h3>Simulated equity paths</h3>
@@ -111,7 +107,7 @@
 
     <section class="panel strategy-panel">
       <div class="panel-head">
-        <h2>Lesson examples, translated into R</h2>
+        <h2>Example strategies, translated into R</h2>
         <span class="pill">10 trades per month · 1R loss baseline</span>
       </div>
       <div id="strategy-cards" class="strategy-cards"></div>

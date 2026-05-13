@@ -118,7 +118,7 @@ recovery % = drawdown / (1 - drawdown)
 
 ### `/edge-simulator/` — Edge Simulator
 
-Lesson #2 probability and expectancy simulator.
+Probability and expectancy simulator.
 
 Features:
 
@@ -134,7 +134,7 @@ Features:
 - expected dollar result per month
 - break-even win rate
 - positive / negative / break-even edge status
-- comparison cards and chart for the lesson examples:
+- comparison cards and chart for example strategies:
   - 90% small win / big loss
   - 60% medium win
   - 30% large win
