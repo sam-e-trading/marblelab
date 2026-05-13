@@ -1,6 +1,6 @@
 # Marble Lab — Project State
 
-Last updated: 2026-05-13
+Last updated: 2026-05-14
 
 ## What this is
 
@@ -116,6 +116,37 @@ Formula:
 recovery % = drawdown / (1 - drawdown)
 ```
 
+### `/edge-simulator/` — Edge Simulator
+
+Lesson #2 probability and expectancy simulator.
+
+Features:
+
+- win rate %
+- average win in R
+- average loss in R as a positive loss magnitude
+- trades per month
+- starting balance
+- risk per trade %
+- simulated months and simulation paths
+- expectancy per trade in R
+- expected R per month
+- expected dollar result per month
+- break-even win rate
+- positive / negative / break-even edge status
+- comparison cards and chart for the lesson examples:
+  - 90% small win / big loss
+  - 60% medium win
+  - 30% large win
+- lightweight fixed-fraction equity path simulation
+
+Formulae:
+
+```text
+expectancy R = (win rate * average win R) - (loss rate * average loss R)
+break-even win rate = average loss R / (average win R + average loss R)
+```
+
 ## Supporting docs
 
 Briefs live in `marblelab/docs/`, including:
@@ -123,6 +154,7 @@ Briefs live in `marblelab/docs/`, including:
 - `compounding-returns-calculator-brief.md`
 - `compounding-returns-monthly-path-v2-brief.md`
 - `drawdown-recovery-tool-brief.md`
+- `edge-simulator-brief.md`
 
 ## Brand / wording guidance
 
@@ -165,6 +197,7 @@ node --check position-sizing/app.js
 node --check position-sizing-calculator/app.js
 node --check compounding-returns/app.js
 node --check drawdown-recovery/app.js
+node --check edge-simulator/app.js
 python3 -m http.server 8770
 ```
 
@@ -175,3 +208,4 @@ Local URLs:
 - http://127.0.0.1:8770/position-sizing-calculator/
 - http://127.0.0.1:8770/compounding-returns/
 - http://127.0.0.1:8770/drawdown-recovery/
+- http://127.0.0.1:8770/edge-simulator/

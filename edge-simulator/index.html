@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edge Simulator — Marble Lab</title>
+  <meta name="description" content="A simple expectancy and probability simulator for exploring trading edge, win rate, payoff, and R-multiples." />
+  <meta property="og:title" content="Edge Simulator" />
+  <meta property="og:description" content="Explore trading edge, win rate, payoff, expectancy, and simulated equity paths in R." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a href="../">← Marble Lab</a>
+      <span>Educational only · Not financial advice</span>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Probabilities for traders</p>
+        <h1>Edge Simulator</h1>
+        <p class="lede">Test whether a strategy actually has positive expectancy. High win rates feel tidy, but the payoff profile decides whether the lucky dip has good tickets in it.</p>
+      </div>
+      <div class="score-card" id="status-card">
+        <span>Edge status</span>
+        <strong id="edge-status">Positive edge</strong>
+        <small id="status-context">+0.50R expectancy per trade</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="panel-head">
+          <h2>Inputs</h2>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+
+        <label><span class="label-row"><span>Win rate: <strong id="win-rate-label">60%</strong></span><span class="tip" tabindex="0" data-tip="How often this strategy wins over a large sample. One month can still look messy.">?</span></span>
+          <input id="win-rate" type="range" min="1" max="99" step="1" value="60" />
+        </label>
+
+        <div class="input-pair">
+          <label><span class="label-row"><span>Average win in R</span><span class="tip" tabindex="0" data-tip="Average winner measured as a multiple of your initial risk. A +1.5R win makes 1.5 times what you risked.">?</span></span>
+            <input id="avg-win" type="number" min="0.01" max="50" step="0.1" value="1.5" />
+          </label>
+
+          <label><span class="label-row"><span>Average loss in R</span><span class="tip" tabindex="0" data-tip="Enter the loss magnitude as a positive number. A normal stopped-out trade is usually 1R.">?</span></span>
+            <input id="avg-loss" type="number" min="0.01" max="50" step="0.1" value="1" />
+          </label>
+        </div>
+
+        <label>Trades per month
+          <input id="trades-month" type="number" min="1" max="200" step="1" value="10" />
+        </label>
+
+        <label>Starting balance
+          <input id="capital" type="number" min="100" max="100000000" step="1000" value="100000" />
+        </label>
+
+        <label>Risk per trade: <strong id="risk-label">1.00%</strong>
+          <input id="risk" type="range" min="0.1" max="10" step="0.1" value="1" />
+        </label>
+
+        <div class="input-pair">
+          <label>Simulated months
+            <input id="months" type="number" min="1" max="60" step="1" value="12" />
+          </label>
+
+          <label>Simulation paths
+            <input id="paths" type="number" min="1" max="120" step="1" value="80" />
+          </label>
+        </div>
+
+        <button id="simulate">Roll the probabilities</button>
+        <p class="note">This is a simplified fixed-fraction model. It ignores spread, slippage, correlation, changing market conditions, execution mistakes, tax, funding costs, and the emotional urge to fiddle with a working plan.</p>
+      </aside>
+
+      <section class="panel dashboard">
+        <div class="stats">
+          <article><span id="expectancy-r">+0.50R</span><small>expectancy / trade</small></article>
+          <article><span id="monthly-r">+5.00R</span><small>expected R / month</small></article>
+          <article><span id="monthly-cash">+$5,000</span><small>expected $ / month</small></article>
+          <article><span id="breakeven-rate">40.0%</span><small>break-even win rate</small></article>
+        </div>
+
+        <div class="result-strip">
+          <div>
+            <p class="eyebrow">Readout</p>
+            <strong id="readout">This setup has positive expectancy. The question is whether you can execute enough trades for the math to show up.</strong>
+          </div>
+          <div>
+            <p class="eyebrow">Win-rate trap</p>
+            <strong id="win-rate-trap">A lower win rate can still win if the average winner is large enough to pay for the losses.</strong>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-wrap">
+            <h3>Lesson strategy comparison</h3>
+            <canvas id="strategy-chart" width="760" height="330" aria-label="Comparison of three lesson strategies"></canvas>
+          </div>
+          <div class="chart-wrap">
+            <h3>Simulated equity paths</h3>
+            <canvas id="equity-chart" width="760" height="330" aria-label="Simulated equity paths"></canvas>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel strategy-panel">
+      <div class="panel-head">
+        <h2>Lesson examples, translated into R</h2>
+        <span class="pill">10 trades per month · 1R loss baseline</span>
+      </div>
+      <div id="strategy-cards" class="strategy-cards"></div>
+    </section>
+
+    <section class="panel explainer">
+      <h2>How to read it</h2>
+      <ol>
+        <li><strong>Expectancy</strong> is the average R you expect per trade: win probability times average win, minus loss probability times average loss.</li>
+        <li><strong>Break-even win rate</strong> shows how often you need to win for this payoff profile to stop losing before costs.</li>
+        <li><strong>Position sizing</strong> changes the dollar swing, not the edge. Too much size can wreck a good system before the probabilities get time to work.</li>
+        <li><strong>Entries and exits</strong> matter because they change both the number of winners and how big those winners are.</li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span>Marble Lab · Edge Simulator</span>
+      <span>Free educational tool · Runs locally in your browser</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
