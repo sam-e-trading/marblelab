@@ -37,45 +37,45 @@
           <button id="reset" class="ghost">Reset</button>
         </div>
 
-        <label>Starting capital
+        <label>Starting capital <span class="tip" tabindex="0" data-tip="The account balance you start the projection with.">?</span>
           <input id="capital" type="number" min="100" max="100000000" step="1000" value="100000" />
         </label>
 
         <div class="input-pair">
-          <label>Years
+          <label>Years <span class="tip" tabindex="0" data-tip="Whole years to include in the projection.">?</span>
             <input id="years" type="number" min="0" max="50" step="1" value="3" />
           </label>
-          <label>Extra months
+          <label>Extra months <span class="tip" tabindex="0" data-tip="Additional months after the whole-year period.">?</span>
             <input id="months" type="number" min="0" max="11" step="1" value="0" />
           </label>
         </div>
 
-        <label>Average monthly return: <strong id="return-label">1.65%</strong>
+        <label>Average monthly return: <strong id="return-label">1.65%</strong> <span class="tip" tabindex="0" data-tip="The average monthly return assumption. The variable path will move around this average.">?</span>
           <input id="monthly-return" type="range" min="-10" max="20" step="0.05" value="1.65" />
         </label>
 
-        <label>Monthly return volatility: <strong id="vol-label">5.0%</strong>
+        <label>Monthly return volatility: <strong id="vol-label">5.0%</strong> <span class="tip" tabindex="0" data-tip="How much monthly returns vary around the average. Higher volatility creates bumpier paths and usually larger drawdowns.">?</span>
           <input id="monthly-vol" type="range" min="0" max="30" step="0.25" value="5" />
         </label>
 
         <div class="input-pair">
-          <label>Max losing month (%)
+          <label>Max losing month (%) <span class="tip" tabindex="0" data-tip="The worst monthly return allowed in the generated path and simulations. Example: -15 means no simulated month can be worse than -15%.">?</span>
             <input id="max-loss" type="number" min="-80" max="0" step="0.5" value="-15" />
           </label>
-          <label>Max winning month (%)
+          <label>Max winning month (%) <span class="tip" tabindex="0" data-tip="The best monthly return allowed in the generated path and simulations. Example: 25 means no simulated month can exceed +25%.">?</span>
             <input id="max-win" type="number" min="0" max="150" step="0.5" value="25" />
           </label>
         </div>
 
-        <label>Monthly contribution / withdrawal
+        <label>Monthly contribution / withdrawal <span class="tip" tabindex="0" data-tip="Cash added to or removed from the account each month after returns are applied. Use a negative number for withdrawals.">?</span>
           <input id="cashflow" type="number" min="-1000000" max="1000000" step="100" value="0" />
         </label>
 
-        <label>Simulation paths
+        <label>Simulation paths <span class="tip" tabindex="0" data-tip="How many random return paths to run for the percentile and drawdown estimates. More paths are smoother but slower.">?</span>
           <input id="simulations" type="number" min="100" max="10000" step="100" value="2000" />
         </label>
 
-        <label>Compounding model
+        <label>Compounding model <span class="tip" tabindex="0" data-tip="Choose how each monthly return is converted into dollars. Use the same return sequence to compare models fairly.">?</span>
           <select id="model">
             <option value="compound">Fully compounded · returns apply to current balance</option>
             <option value="simple">Simple / non-compounded · returns apply to starting capital</option>
@@ -92,10 +92,10 @@
 
       <section class="panel dashboard">
         <div class="stats">
-          <article><span id="median-ending">$176,421</span><small>median ending</small></article>
-          <article><span id="p10-ending">$104,213</span><small>p10 ending</small></article>
-          <article><span id="p90-ending">$298,880</span><small>p90 ending</small></article>
-          <article><span id="p95-dd">28.4%</span><small>p95 max drawdown</small></article>
+          <article><span id="median-ending">$176,421</span><small>median ending <span class="tip" tabindex="0" data-tip="The middle simulated result: half the simulation paths ended above this balance, half below.">?</span></small></article>
+          <article><span id="p10-ending">$104,213</span><small>p10 ending <span class="tip" tabindex="0" data-tip="A lower-end outcome: 10% of simulation paths ended below this balance.">?</span></small></article>
+          <article><span id="p90-ending">$298,880</span><small>p90 ending <span class="tip" tabindex="0" data-tip="An upper-end outcome: 90% of simulation paths ended below this balance, 10% above it.">?</span></small></article>
+          <article><span id="p95-dd">28.4%</span><small>p95 max drawdown <span class="tip" tabindex="0" data-tip="A severe drawdown estimate: 95% of simulations had max drawdown at or below this level, 5% were worse.">?</span></small></article>
         </div>
 
         <div class="result-strip">
@@ -111,15 +111,15 @@
 
         <div class="chart-grid">
           <div class="chart-wrap full-width">
-            <h3>Generated monthly returns</h3>
+            <h3>Generated monthly returns <span class="tip" tabindex="0" data-tip="One random monthly return sequence. Green months are positive, orange months are negative. Click Generate new path to create a different sequence.">?</span></h3>
             <canvas id="returns-chart" width="1540" height="280" aria-label="Generated monthly returns bar chart"></canvas>
           </div>
           <div class="chart-wrap">
-            <h3>Compounding impact path</h3>
+            <h3>Compounding impact path <span class="tip" tabindex="0" data-tip="Shows how the selected compounding model turns the monthly return sequence into an account balance path.">?</span></h3>
             <canvas id="growth-chart" width="760" height="300" aria-label="Smooth and simulated growth paths"></canvas>
           </div>
           <div class="chart-wrap">
-            <h3>Ending balance distribution</h3>
+            <h3>Ending balance distribution <span class="tip" tabindex="0" data-tip="A histogram of final balances from all simulation paths. Left is worse outcomes, right is better outcomes.">?</span></h3>
             <canvas id="distribution-chart" width="760" height="300" aria-label="Ending balance distribution"></canvas>
           </div>
         </div>
