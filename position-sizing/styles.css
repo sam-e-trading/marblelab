@@ -20,7 +20,9 @@ body {
     radial-gradient(circle at 92% 16%, rgba(255,92,0,.12), transparent 22rem),
     linear-gradient(135deg, #141d22, var(--trust-black));
 }
-.shell { width: min(1320px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 48px; }
+.shell { width: min(1320px, calc(100% - 32px)); margin: 0 auto; padding: 24px 0 48px; }
+.topbar { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; color: var(--muted); margin: 0 4px 16px; font-size: .9rem; }
+.topbar a { color: var(--fresh-green); text-decoration: none; font-weight: 900; }
 .hero { display: flex; justify-content: space-between; gap: 20px; align-items: stretch; margin-bottom: 18px; }
 .hero > div:first-child, .score-card, .panel { border: 1px solid var(--border); background: var(--panel); border-radius: 28px; box-shadow: 0 24px 80px rgba(0,0,0,.22); }
 .hero > div:first-child { flex: 1; padding: 30px; }
