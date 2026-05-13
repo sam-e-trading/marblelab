@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drawdown Recovery Calculator — Marble Lab</title>
+  <meta name="description" content="A simple visual calculator showing the return required to recover from trading drawdowns." />
+  <meta property="og:title" content="Drawdown Recovery Calculator" />
+  <meta property="og:description" content="See how much return is required to recover from different drawdowns." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a href="../">← Marble Lab</a>
+      <span>Educational only · Not financial advice</span>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Drawdown maths, without the spreadsheet goblins</p>
+        <h1>Drawdown Recovery Calculator</h1>
+        <p class="lede">See the return required to recover from a drawdown. The lesson is simple: losses and recovery are not symmetrical.</p>
+      </div>
+      <div class="score-card">
+        <span>Required recovery return</span>
+        <strong id="recovery-headline">42.9%</strong>
+        <small id="headline-context">to recover from a 30% drawdown</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="panel-head">
+          <h2>Inputs</h2>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+
+        <label><span class="label-row"><span>Drawdown: <strong id="drawdown-label">30%</strong></span><span class="tip" tabindex="0" data-tip="The percentage fall from the account peak. A 30% drawdown means $100,000 falls to $70,000.">?</span></span>
+          <input id="drawdown" type="range" min="1" max="90" step="1" value="30" />
+        </label>
+
+        <label><span class="label-row"><span>Starting balance</span><span class="tip" tabindex="0" data-tip="Optional dollar context. The recovery percentage is the same regardless of account size.">?</span></span>
+          <input id="capital" type="number" min="100" max="100000000" step="1000" value="100000" />
+        </label>
+
+        <p class="note">Formula: recovery return = drawdown ÷ (1 − drawdown). A 50% drawdown needs a 100% gain because you are growing from the smaller remaining balance.</p>
+      </aside>
+
+      <section class="panel dashboard">
+        <div class="stats">
+          <article><span id="start-balance">$100,000</span><small>starting balance</small></article>
+          <article><span id="after-drawdown">$70,000</span><small>after drawdown</small></article>
+          <article><span id="dollar-loss">-$30,000</span><small>dollar loss</small></article>
+          <article><span id="profit-needed">+$30,000</span><small>profit needed</small></article>
+        </div>
+
+        <div class="result-strip">
+          <div>
+            <p class="eyebrow">Readout</p>
+            <strong id="readout">A 30% drawdown requires a 42.9% gain to recover.</strong>
+          </div>
+          <div>
+            <p class="eyebrow">Lesson</p>
+            <strong id="lesson">This is why avoiding deep drawdowns matters more than it feels in the moment.</strong>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-wrap">
+            <h3>Before, drawdown, recovery</h3>
+            <canvas id="bar-chart" width="760" height="320" aria-label="Before drawdown and recovery bar chart"></canvas>
+          </div>
+          <div class="chart-wrap">
+            <h3>Recovery curve</h3>
+            <canvas id="curve-chart" width="760" height="320" aria-label="Drawdown recovery curve"></canvas>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel summary-panel">
+      <div class="panel-head">
+        <h2>Drawdown recovery quick reference</h2>
+        <span class="pill">The bigger the hole, the steeper the climb</span>
+      </div>
+      <div id="summary-table" class="summary-table"></div>
+    </section>
+
+    <section class="panel explainer">
+      <h2>Why it matters</h2>
+      <p>A drawdown reduces the capital base you are trying to grow from. That is why the recovery return is always larger than the loss percentage. Down 10% is annoying. Down 50% means you need to double what remains just to get back to breakeven.</p>
+    </section>
+
+    <footer class="footer">
+      <span>Marble Lab · Drawdown Recovery Calculator</span>
+      <span>Free educational tool · Runs locally in your browser</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
