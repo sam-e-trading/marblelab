@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compounding Returns Calculator — Marble Lab</title>
+  <meta name="description" content="A trader-focused compounding returns calculator with smooth growth, variable monthly returns, percentile outcomes, and drawdown estimates." />
+  <meta property="og:title" content="Compounding Returns Calculator" />
+  <meta property="og:description" content="Model smooth and variable trading return paths over time." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a href="../">← Marble Lab</a>
+      <span>Educational only · Not financial advice</span>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Growth path modeller</p>
+        <h1>Compounding Returns Calculator</h1>
+        <p class="lede">Model smooth compounding, variable monthly returns, contributions, withdrawals, percentile outcomes, and drawdowns. Because the spreadsheet path is always much better behaved than the real one.</p>
+      </div>
+      <div class="score-card">
+        <span>Smooth ending balance</span>
+        <strong id="smooth-ending">$179,585</strong>
+        <small id="smooth-return">+79.6% total return</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="panel-head">
+          <h2>Inputs</h2>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+
+        <label>Starting capital
+          <input id="capital" type="number" min="100" max="100000000" step="1000" value="100000" />
+        </label>
+
+        <div class="input-pair">
+          <label>Years
+            <input id="years" type="number" min="0" max="50" step="1" value="3" />
+          </label>
+          <label>Extra months
+            <input id="months" type="number" min="0" max="11" step="1" value="0" />
+          </label>
+        </div>
+
+        <label>Average monthly return: <strong id="return-label">1.65%</strong>
+          <input id="monthly-return" type="range" min="-10" max="20" step="0.05" value="1.65" />
+        </label>
+
+        <label>Monthly return volatility: <strong id="vol-label">5.0%</strong>
+          <input id="monthly-vol" type="range" min="0" max="30" step="0.25" value="5" />
+        </label>
+
+        <label>Monthly contribution / withdrawal
+          <input id="cashflow" type="number" min="-1000000" max="1000000" step="100" value="0" />
+        </label>
+
+        <label>Simulation paths
+          <input id="simulations" type="number" min="100" max="10000" step="100" value="2000" />
+        </label>
+
+        <button id="calculate">Recalculate</button>
+        <p class="note">Variable mode samples monthly returns from a simple bounded distribution. Useful for learning; not a crystal ball, sadly.</p>
+      </aside>
+
+      <section class="panel dashboard">
+        <div class="stats">
+          <article><span id="median-ending">$176,421</span><small>median ending</small></article>
+          <article><span id="p10-ending">$104,213</span><small>p10 ending</small></article>
+          <article><span id="p90-ending">$298,880</span><small>p90 ending</small></article>
+          <article><span id="p95-dd">28.4%</span><small>p95 max drawdown</small></article>
+        </div>
+
+        <div class="result-strip">
+          <div>
+            <p class="eyebrow">Readout</p>
+            <strong id="readout">Smooth path looks tidy. Simulated path is less polite.</strong>
+          </div>
+          <div>
+            <p class="eyebrow">Risk check</p>
+            <strong id="risk-check">Watch the left tail and drawdown estimate before falling in love with the ending balance.</strong>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-wrap">
+            <h3>Smooth vs median growth path</h3>
+            <canvas id="growth-chart" width="760" height="300" aria-label="Smooth and simulated growth paths"></canvas>
+          </div>
+          <div class="chart-wrap">
+            <h3>Ending balance distribution</h3>
+            <canvas id="distribution-chart" width="760" height="300" aria-label="Ending balance distribution"></canvas>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel explainer">
+      <h2>How to use it</h2>
+      <ol>
+        <li>Start with the smooth monthly return to see the idealised growth path.</li>
+        <li>Add monthly volatility to see a more realistic range of outcomes.</li>
+        <li>Use contributions or withdrawals to model adding capital or taking profits.</li>
+        <li>Compare the median, p10, p90, and drawdown numbers before trusting the pretty curve.</li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span>Marble Lab · Compounding Returns Calculator</span>
+      <span>Free educational tool · Runs locally in your browser</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
