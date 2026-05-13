@@ -37,45 +37,45 @@
           <button id="reset" class="ghost">Reset</button>
         </div>
 
-        <label>Starting capital <span class="tip" tabindex="0" data-tip="The account balance you start the projection with.">?</span>
+        <label><span class="label-row"><span>Starting capital</span><span class="tip" tabindex="0" data-tip="The account balance you start the projection with.">?</span></span>
           <input id="capital" type="number" min="100" max="100000000" step="1000" value="100000" />
         </label>
 
         <div class="input-pair">
-          <label>Years <span class="tip" tabindex="0" data-tip="Whole years to include in the projection.">?</span>
+          <label><span class="label-row"><span>Years</span><span class="tip" tabindex="0" data-tip="Whole years to include in the projection.">?</span></span>
             <input id="years" type="number" min="0" max="50" step="1" value="3" />
           </label>
-          <label>Extra months <span class="tip" tabindex="0" data-tip="Additional months after the whole-year period.">?</span>
+          <label><span class="label-row"><span>Extra months</span><span class="tip" tabindex="0" data-tip="Additional months after the whole-year period.">?</span></span>
             <input id="months" type="number" min="0" max="11" step="1" value="0" />
           </label>
         </div>
 
-        <label>Average monthly return: <strong id="return-label">1.65%</strong> <span class="tip" tabindex="0" data-tip="The average monthly return assumption. The variable path will move around this average.">?</span>
+        <label><span class="label-row"><span>Average monthly return: <strong id="return-label">1.65%</strong></span><span class="tip" tabindex="0" data-tip="The average monthly return assumption. The variable path will move around this average.">?</span></span>
           <input id="monthly-return" type="range" min="-10" max="20" step="0.05" value="1.65" />
         </label>
 
-        <label>Monthly return volatility: <strong id="vol-label">5.0%</strong> <span class="tip" tabindex="0" data-tip="How much monthly returns vary around the average. Higher volatility creates bumpier paths and usually larger drawdowns.">?</span>
+        <label><span class="label-row"><span>Monthly return volatility: <strong id="vol-label">5.0%</strong></span><span class="tip" tabindex="0" data-tip="How much monthly returns vary around the average. Higher volatility creates bumpier paths and usually larger drawdowns.">?</span></span>
           <input id="monthly-vol" type="range" min="0" max="30" step="0.25" value="5" />
         </label>
 
         <div class="input-pair">
-          <label>Max losing month (%) <span class="tip" tabindex="0" data-tip="The worst monthly return allowed in the generated path and simulations. Example: -15 means no simulated month can be worse than -15%.">?</span>
+          <label><span class="label-row"><span>Max losing month (%)</span><span class="tip" tabindex="0" data-tip="The worst monthly return allowed in the generated path and simulations. Example: -15 means no simulated month can be worse than -15%.">?</span></span>
             <input id="max-loss" type="number" min="-80" max="0" step="0.5" value="-15" />
           </label>
-          <label>Max winning month (%) <span class="tip" tabindex="0" data-tip="The best monthly return allowed in the generated path and simulations. Example: 25 means no simulated month can exceed +25%.">?</span>
+          <label><span class="label-row"><span>Max winning month (%)</span><span class="tip" tabindex="0" data-tip="The best monthly return allowed in the generated path and simulations. Example: 25 means no simulated month can exceed +25%.">?</span></span>
             <input id="max-win" type="number" min="0" max="150" step="0.5" value="25" />
           </label>
         </div>
 
-        <label>Monthly contribution / withdrawal <span class="tip" tabindex="0" data-tip="Cash added to or removed from the account each month after returns are applied. Use a negative number for withdrawals.">?</span>
+        <label><span class="label-row"><span>Monthly contribution / withdrawal</span><span class="tip" tabindex="0" data-tip="Cash added to or removed from the account each month after returns are applied. Use a negative number for withdrawals.">?</span></span>
           <input id="cashflow" type="number" min="-1000000" max="1000000" step="100" value="0" />
         </label>
 
-        <label>Simulation paths <span class="tip" tabindex="0" data-tip="How many random return paths to run for the percentile and drawdown estimates. More paths are smoother but slower.">?</span>
+        <label><span class="label-row"><span>Simulation paths</span><span class="tip" tabindex="0" data-tip="How many random return paths to run for the percentile and drawdown estimates. More paths are smoother but slower.">?</span></span>
           <input id="simulations" type="number" min="100" max="10000" step="100" value="2000" />
         </label>
 
-        <label>Compounding model <span class="tip" tabindex="0" data-tip="Choose how each monthly return is converted into dollars. Use the same return sequence to compare models fairly.">?</span>
+        <label><span class="label-row"><span>Compounding model</span><span class="tip" tabindex="0" data-tip="Choose how each monthly return is converted into dollars. Use the same return sequence to compare models fairly.">?</span></span>
           <select id="model">
             <option value="compound">Fully compounded · returns apply to current balance</option>
             <option value="simple">Simple / non-compounded · returns apply to starting capital</option>
