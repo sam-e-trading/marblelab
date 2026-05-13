@@ -88,6 +88,13 @@ function drawGrowth(canvas, smooth, median, start) {
   smooth.forEach((v, i) => i ? ctx.lineTo(x(i, smooth.length), y(v)) : ctx.moveTo(x(i, smooth.length), y(v))); ctx.stroke();
   ctx.strokeStyle = '#CFFC54'; ctx.lineWidth = 4; ctx.beginPath();
   median.forEach((v, i) => i ? ctx.lineTo(x(i, median.length), y(v)) : ctx.moveTo(x(i, median.length), y(v))); ctx.stroke();
+  ctx.font = '700 13px system-ui, sans-serif';
+  ctx.fillStyle = '#D6DAF3'; ctx.fillRect(pad, 12, 14, 4); ctx.fillText('smooth path', pad + 20, 17);
+  ctx.fillStyle = '#CFFC54'; ctx.fillRect(pad + 130, 12, 14, 4); ctx.fillText('median simulation', pad + 150, 17);
+  ctx.fillStyle = 'rgba(255,255,255,.62)';
+  ctx.fillText('start', pad, h - 8);
+  ctx.textAlign = 'right'; ctx.fillText('end', w - pad, h - 8);
+  ctx.textAlign = 'left';
 }
 
 function drawHistogram(canvas, values) {
@@ -100,6 +107,12 @@ function drawHistogram(canvas, values) {
   values.forEach(v => { const idx = Math.min(buckets.length - 1, Math.floor(((v - min) / Math.max(1, max - min)) * buckets.length)); buckets[idx]++; });
   const maxBucket = Math.max(...buckets, 1), gap = 3, barW = (w - pad * 2 - gap * (buckets.length - 1)) / buckets.length;
   buckets.forEach((count, i) => { const barH = ((h - pad * 2) * count) / maxBucket; ctx.fillStyle = i < buckets.length * .25 ? '#FF5C00' : '#CFFC54'; ctx.fillRect(pad + i * (barW + gap), h - pad - barH, barW, barH); });
+  ctx.font = '700 13px system-ui, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,.7)';
+  ctx.fillText(`lower outcomes · ${fmt(min)}`, pad, h - 8);
+  ctx.textAlign = 'right';
+  ctx.fillText(`higher outcomes · ${fmt(max)}`, w - pad, h - 8);
+  ctx.textAlign = 'left';
 }
 
 function readout(config, smooth, sim) {
