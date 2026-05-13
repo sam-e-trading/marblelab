@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Position Sizing Lab — Risk Sizing Simulator</title>
+  <meta name="description" content="A free, dependency-free trading risk simulator for learning expectancy, drawdown, and position sizing." />
+  <meta property="og:title" content="Position Sizing Lab" />
+  <meta property="og:description" content="A small public simulator: the edge is fixed, but your sizing decides what happens." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Free community trading-risk simulator</p>
+        <h1>Position Sizing Lab</h1>
+        <p class="lede">A small public trading-risk game: the edge is fixed, but your sizing decides whether you compound, crawl, or blow yourself to bits.</p>
+      </div>
+      <div class="score-card">
+        <span>Equity</span>
+        <strong id="equity">$100,000</strong>
+        <small id="equity-change">Ready</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="panel-head">
+          <h2>Game setup</h2>
+          <button id="new-game" class="ghost">New game</button>
+        </div>
+
+        <label>System preset
+          <select id="preset">
+            <option value="classic">Classic edge · 40% win +2R / 60% lose -1R</option>
+            <option value="smoother">Smoother · 50% win +1.4R / 50% lose -1R</option>
+            <option value="wild">Wild trend · 30% win +3.5R / 70% lose -1R</option>
+            <option value="coinflip">No edge · 50% win +1R / 50% lose -1R</option>
+            <option value="custom">Custom setup · choose your own criteria</option>
+          </select>
+        </label>
+
+        <div id="custom-setup" class="custom-setup" hidden>
+          <p class="mini-heading">Custom criteria</p>
+          <label>Win probability: <strong id="custom-win-label">40%</strong>
+            <input id="custom-win-prob" type="range" min="1" max="99" step="1" value="40" />
+          </label>
+          <div class="input-pair">
+            <label>Average win, R
+              <input id="custom-win-r" type="number" min="0.1" max="20" step="0.1" value="2" />
+            </label>
+            <label>Average loss, R
+              <input id="custom-loss-r" type="number" min="0.1" max="10" step="0.1" value="1" />
+            </label>
+          </div>
+          <p id="custom-summary" class="custom-summary">40% wins at +2R, 60% losses at -1R · expectancy +0.20R</p>
+        </div>
+
+        <label>Trades per round
+          <input id="trade-count" type="number" min="10" max="200" step="5" value="30" />
+        </label>
+
+        <label>Starting equity
+          <input id="start-equity" type="number" min="1000" max="10000000" step="1000" value="100000" />
+        </label>
+
+        <label>Risk per trade: <strong id="risk-label">2.0%</strong>
+          <input id="risk" type="range" min="0.25" max="25" step="0.25" value="2" />
+        </label>
+
+        <div class="button-row">
+          <button id="take-trade">Take next trade</button>
+          <button id="auto-run" class="secondary">Auto-run round</button>
+        </div>
+
+        <div class="strategy-buttons">
+          <button data-risk="1">Cautious 1%</button>
+          <button data-risk="2">Balanced 2%</button>
+          <button data-risk="5">Punchy 5%</button>
+          <button data-risk="10">Unhinged 10%</button>
+        </div>
+
+        <p class="note">Educational toy only. It ignores slippage, correlation, changing volatility, liquidity, and all the other goblins that live under real trading desks.</p>
+      </aside>
+
+      <section class="panel dashboard">
+        <div class="stats">
+          <article><span id="trade-number">0 / 30</span><small>trades</small></article>
+          <article><span id="win-rate">–</span><small>realised win rate</small></article>
+          <article><span id="max-dd">0.0%</span><small>max drawdown</small></article>
+          <article><span id="expectancy">+0.20R</span><small>system expectancy</small></article>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="equity-chart" width="900" height="340" aria-label="Equity curve"></canvas>
+        </div>
+
+        <div class="result-strip">
+          <div>
+            <p class="eyebrow">Last trade</p>
+            <strong id="last-trade">None yet</strong>
+          </div>
+          <div>
+            <p class="eyebrow">Lesson</p>
+            <strong id="lesson">Positive expectancy is not permission to bet like a lunatic.</strong>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Trade log</h2>
+        <div class="panel-actions"><button id="copy-summary" class="ghost">Copy result</button><button id="clear-log" class="ghost">Clear log</button></div>
+      </div>
+      <div id="trade-log" class="trade-log"></div>
+    </section>
+      <section class="panel explainer" id="about">
+      <h2>What is this?</h2>
+      <p>This is a free educational simulator for position sizing. It uses simplified R-multiple outcomes to show why risk per trade can matter more than being right.</p>
+      <ul>
+        <li><strong>Not financial advice.</strong> It is a teaching toy, not a trading system.</li>
+        <li><strong>No affiliation implied.</strong> It is inspired by classic position-sizing education, including Van Tharp-style lessons, but is an original simulator.</li>
+        <li><strong>No tracking.</strong> It runs locally in your browser and stores nothing.</li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <span>Position Sizing Lab</span>
+      <span>Free community edition · MIT licensed · Educational only</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

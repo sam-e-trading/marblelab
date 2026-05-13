@@ -1,0 +1,19 @@
+{
+  "name": "position-sizing-lab",
+  "version": "0.1.0",
+  "private": false,
+  "description": "A dependency-free trading-risk simulator for learning position sizing, expectancy, and drawdown.",
+  "license": "MIT",
+  "scripts": {
+    "start": "python3 -m http.server 8766",
+    "check": "node --check app.js"
+  },
+  "keywords": [
+    "trading",
+    "risk-management",
+    "position-sizing",
+    "expectancy",
+    "drawdown",
+    "education"
+  ]
+}
