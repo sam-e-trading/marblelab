@@ -12,11 +12,15 @@ function esc(value = '') { return String(value).replace(/[&<>"']/g, char => ({ '
 function inputs() {
   const years = clamp(Number(el('years').value) || 0, 0, 50);
   const extraMonths = clamp(Number(el('months').value) || 0, 0, 11);
+  const maxLoss = clamp(Number(el('max-loss').value) || -15, -80, 0) / 100;
+  const maxWin = clamp(Number(el('max-win').value) || 25, 0, 150) / 100;
   return {
     capital: clamp(Number(el('capital').value) || 100000, 100, 100000000),
     months: Math.max(1, Math.round(years * 12 + extraMonths)),
     monthlyReturn: clamp(Number(el('monthly-return').value) || 0, -10, 20) / 100,
     monthlyVol: clamp(Number(el('monthly-vol').value) || 0, 0, 30) / 100,
+    maxLoss: Math.min(maxLoss, maxWin),
+    maxWin: Math.max(maxLoss, maxWin),
     cashflow: clamp(Number(el('cashflow').value) || 0, -1000000, 1000000),
     simulations: Math.round(clamp(Number(el('simulations').value) || 2000, 100, 10000)),
     model: el('model').value
@@ -24,7 +28,7 @@ function inputs() {
 }
 
 function signature(config) {
-  return [config.months, config.monthlyReturn, config.monthlyVol].join('|');
+  return [config.months, config.monthlyReturn, config.monthlyVol, config.maxLoss, config.maxWin].join('|');
 }
 
 function randomNormal() {
@@ -34,7 +38,7 @@ function randomNormal() {
 }
 
 function generateReturns(config) {
-  monthlyReturns = Array.from({ length: config.months }, () => clamp(config.monthlyReturn + randomNormal() * config.monthlyVol, -0.8, 1.5));
+  monthlyReturns = Array.from({ length: config.months }, () => clamp(config.monthlyReturn + randomNormal() * config.monthlyVol, config.maxLoss, config.maxWin));
   pathSignature = signature(config);
 }
 
@@ -76,7 +80,7 @@ function calculatePath(config, returns = monthlyReturns, model = config.model) {
 }
 
 function simulatePath(config) {
-  const returns = Array.from({ length: config.months }, () => clamp(config.monthlyReturn + randomNormal() * config.monthlyVol, -0.8, 1.5));
+  const returns = Array.from({ length: config.months }, () => clamp(config.monthlyReturn + randomNormal() * config.monthlyVol, config.maxLoss, config.maxWin));
   return calculatePath(config, returns, config.model);
 }
 
@@ -236,13 +240,15 @@ function reset() {
   el('months').value = 0;
   el('monthly-return').value = 1.65;
   el('monthly-vol').value = 5;
+  el('max-loss').value = -15;
+  el('max-win').value = 25;
   el('cashflow').value = 0;
   el('simulations').value = 2000;
   el('model').value = 'compound';
   calculate({ regenerate: true });
 }
 
-['capital','years','months','monthly-return','monthly-vol','cashflow','simulations','model'].forEach(id => {
+['capital','years','months','monthly-return','monthly-vol','max-loss','max-win','cashflow','simulations','model'].forEach(id => {
   el(id).addEventListener('input', () => calculate());
   el(id).addEventListener('change', () => calculate());
 });
