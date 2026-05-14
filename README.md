@@ -9,6 +9,7 @@ Small practical trading tools and experiments from MarketMates.
 - `/compounding-returns/` — Compounding Returns Calculator, a trader-focused growth path modeller with smooth returns, variable monthly simulations, percentile outcomes, and drawdown estimates.
 - `/drawdown-recovery/` — Drawdown Recovery Calculator, a simple visual tool showing the return required to recover from drawdowns.
 - `/edge-simulator/` — Edge Simulator, a probability tool for testing win rate, payoff, R-multiples, expectancy, and simulated equity paths.
+- `/r-multiple-analyst/` — R-Multiple Analyst, a local-browser MT5 XLSX statement review tool using a user-entered fixed dollar value for 1R.
 
 ## Deploy
 
@@ -42,3 +43,7 @@ The Drawdown Recovery Calculator will be available at:
 The Edge Simulator will be available at:
 
 `https://marblelab.marketmates.com/edge-simulator/`
+
+The R-Multiple Analyst will be available at:
+
+`https://marblelab.marketmates.com/r-multiple-analyst/`

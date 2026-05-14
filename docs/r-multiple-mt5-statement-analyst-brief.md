@@ -21,50 +21,65 @@ Columns observed:
 - Profit
 
 ## Key finding
-The sample is enough to build a first version of the analyst, but true R-multiple quality depends on whether the S/L column represents the original planned stop.
+The sample is enough to build a first version of the analyst. For the MVP, Sam wants the user to enter one account-wide dollar value for 1R rather than trying to infer the original planned risk from the MT5 S/L column.
 
-In the sample, some closed trades have S/L on the profitable side of entry or equal to entry. Those are likely moved stops / breakeven / take-profit-like exits, so they should be flagged rather than treated as original 1R.
+Example:
+- User enters: `1R = $100`
+- Trade net P/L: `$250`
+- Trade result: `+2.5R`
 
-## R calculation approach
-For trades where the stop is adverse to entry:
+This is deliberately simple and avoids pretending the MT5 report always preserves original risk. In the sample, some closed trades have S/L on the profitable side of entry or equal to entry. Those are likely moved stops / breakeven / take-profit-like exits, so S/L-based R should be treated as diagnostic/optional rather than the MVP source of truth.
 
-- Buy: `R = (close_price - entry_price) / (entry_price - stop_loss)`
-- Sell: `R = (entry_price - close_price) / (stop_loss - entry_price)`
+## MVP R calculation approach
+Primary MVP calculation:
 
-Only calculate direct R when:
+- `net_pnl = profit + commission + swap`
+- `R = net_pnl / user_entered_one_r_dollars`
+
+Required user input:
+- `1R dollar value` for the uploaded statement, e.g. `$100`
+
+Validation:
+- 1R must be greater than zero.
+- The tool should clearly state that this assumes the same planned dollar risk for all trades in the uploaded statement.
+- If a trader varied risk per trade, v1 results are approximate and should be interpreted as a normalised review rather than exact original R.
+
+Optional diagnostic calculation from S/L where the stop is adverse to entry:
+
+- Buy: `price_R = (close_price - entry_price) / (entry_price - stop_loss)`
+- Sell: `price_R = (entry_price - close_price) / (stop_loss - entry_price)`
+
+Only calculate diagnostic price-R when:
 - buy stop loss < entry, or
 - sell stop loss > entry.
 
-Otherwise mark R as one of:
+Otherwise mark S/L status as one of:
 - `stop moved / non-adverse stop`
 - `breakeven stop`
 - `missing stop`
-- `manual 1R required`
 
 ## First-pass sample stats
 From the received sample:
 - Total closed positions: 96
-- Trades with adverse stop suitable for direct R estimate: 78
-- Trades needing flags/manual interpretation: 18
 - Net P/L: 692.42
 - Net winners: 21
 - Net losers: 75
-- Approx R sum across directly R-able trades: -41.56R
-- Approx average R: -0.53R
-- Approx median R: -0.73R
-- Approx best direct R: +4.61R
-- Approx worst direct R: -1.00R
+- If user entered `1R = $100`, statement result would be approximately `+6.92R` net.
+- Trades with adverse stop suitable for optional diagnostic price-R: 78
+- Trades needing S/L flags/manual interpretation if using stop-based diagnostics: 18
 
-These are provisional because moved stops can distort the R interpretation.
+The previous stop-based direct-R estimates are useful as diagnostics only because moved stops can distort the original-risk interpretation.
 
 ## Suggested tool outputs
 - Upload MT5 XLSX/HTML statement.
+- User enters the dollar value of 1R for this statement, e.g. `$100`.
 - Parse positions, orders, deals, and results.
-- Show import quality warnings.
+- Show import quality warnings and explain the fixed-1R assumption.
 - Show table of trades with:
   - symbol, side, volume, entry, stop, close, P/L, commission, swap, net P/L
-  - direct R where valid
-  - flag where R cannot be trusted
+  - net P/L
+  - R based on user-entered 1R dollars
+  - optional S/L diagnostic flag where stop data looks moved/missing/non-adverse
 - Summary stats:
   - total trades
   - win rate
@@ -82,10 +97,16 @@ These are provisional because moved stops can distort the R interpretation.
   - consecutive wins/losses
 - Educational framing only, not financial advice.
 
-## Design decision needed
-Choose default handling for non-direct-R trades:
-1. strict mode: exclude from R stats and flag clearly
-2. assisted mode: let user enter planned risk per trade or account risk setting
-3. hybrid mode: direct R where valid, manual/estimated R where not
+## Phase 2 idea
+Later, build or support an MT5 algo/EA/export that records better original-risk data per trade, especially:
+- max gross loss per trade
+- original planned stop/risk at entry
+- MAE/MFE if available
+- per-trade intended 1R in account currency
 
-Recommended MVP: hybrid mode, with strict default and visible warnings.
+Then allow the user to upload that alongside the statement for more accurate per-trade R analysis.
+
+## MVP decision
+Use fixed-dollar 1R input for all trades in the uploaded statement.
+
+Recommended MVP: simple upload + `1R = $___` input + clear caveat that fixed-risk assumption is used across all trades.

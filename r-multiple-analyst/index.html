@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>R-Multiple Analyst — Marble Lab</title>
+  <meta name="description" content="Upload an MT5 XLSX statement and review trades in fixed-dollar R multiples." />
+  <meta property="og:title" content="R-Multiple Analyst" />
+  <meta property="og:description" content="Analyse MT5 closed positions using a user-entered fixed 1R dollar value." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a href="../">← Marble Lab</a>
+      <span>Educational only · Not financial advice</span>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Statement review</p>
+        <h1>R-Multiple Analyst</h1>
+        <p class="lede">Upload an MT5 XLSX trade history statement and convert closed positions into R using one fixed dollar value for 1R.</p>
+      </div>
+      <div class="score-card" id="result-card">
+        <span>Total result</span>
+        <strong id="total-r">0.00R</strong>
+        <small id="total-context">Upload a statement to begin</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="panel-head">
+          <h2>Inputs</h2>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+
+        <label><span class="label-row"><span>MT5 XLSX statement</span><span class="tip" tabindex="0" data-tip="Use the MT5 trade history XLSX export. The file is parsed locally in this browser and is not uploaded to Marble Lab.">?</span></span>
+          <input id="statement-file" type="file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+        </label>
+
+        <label><span class="label-row"><span>Fixed 1R dollar value</span><span class="tip" tabindex="0" data-tip="Every trade uses this one account-wide planned risk value. Example: if 1R is $100 and a trade nets $250, the result is +2.50R.">?</span></span>
+          <input id="one-r" type="number" min="0.01" step="0.01" value="100" />
+        </label>
+
+        <button id="analyse">Analyse statement</button>
+        <p class="note">This v1 does not infer original R from stop loss. It assumes the same planned dollar risk for every trade in the uploaded statement, so varied-risk accounts will be approximate.</p>
+        <p class="note">Net P/L is calculated as profit + commission + swap when those fields exist. Stop-loss data is shown only as a diagnostic flag.</p>
+      </aside>
+
+      <section class="panel dashboard">
+        <div id="status" class="status">Choose an MT5 XLSX statement, enter the fixed dollar value for 1R, then run the analysis.</div>
+
+        <div class="stats">
+          <article><span id="trades">0</span><small>trades</small></article>
+          <article><span id="net-pnl">$0.00</span><small>net P/L</small></article>
+          <article><span id="total-r-stat">0.00R</span><small>total R</small></article>
+          <article><span id="expectancy">0.00R</span><small>expectancy / trade</small></article>
+          <article><span id="win-rate">0.0%</span><small>win rate</small></article>
+          <article><span id="avg-win">0.00R</span><small>avg win</small></article>
+          <article><span id="avg-loss">0.00R</span><small>avg loss</small></article>
+          <article><span id="payoff-ratio">0.00</span><small>payoff ratio</small></article>
+          <article><span id="profit-factor">0.00</span><small>profit factor</small></article>
+          <article><span id="best-worst">0.00R / 0.00R</span><small>best / worst</small></article>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="panel-head compact">
+            <h2>Cumulative R curve</h2>
+            <span id="chart-note" class="pill">fixed 1R</span>
+          </div>
+          <canvas id="equity-chart" width="1180" height="320" aria-label="Cumulative R equity curve"></canvas>
+        </div>
+      </section>
+    </section>
+
+    <section class="split-panels">
+      <section class="panel">
+        <div class="panel-head compact">
+          <h2>Symbol breakdown</h2>
+          <span class="pill" id="symbol-count">0 symbols</span>
+        </div>
+        <div id="symbol-breakdown" class="breakdown-table"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head compact">
+          <h2>Long / short stats</h2>
+          <span class="pill">net P/L + R</span>
+        </div>
+        <div id="side-breakdown" class="breakdown-table"></div>
+      </section>
+    </section>
+
+    <section class="panel trades-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Top trades</h2>
+          <p class="subtle">Largest absolute R results first. Full import quality is reflected by the warnings and S/L diagnostic column.</p>
+        </div>
+        <span id="sl-summary" class="pill">No S/L diagnostics yet</span>
+      </div>
+      <div id="trades-table" class="trades-table"></div>
+    </section>
+
+    <section class="panel explainer">
+      <h2>Important assumptions</h2>
+      <ol>
+        <li><strong>Fixed-risk v1:</strong> this tool uses your entered dollar value as 1R for every closed position in the statement.</li>
+        <li><strong>Stop loss is diagnostic only:</strong> moved, breakeven, missing, or non-adverse stops are flagged but never used as the source of R.</li>
+        <li><strong>Future Phase 2:</strong> a later MT5 EA or algo export could record max gross loss, original per-trade risk, MAE/MFE, and intended 1R so users can upload that alongside the statement for more accurate per-trade R.</li>
+        <li><strong>Educational use only:</strong> outputs are for trade review and learning, not financial advice or a recommendation to trade.</li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span>Marble Lab · R-Multiple Analyst</span>
+      <span>Runs locally in your browser · XLSX parsing by SheetJS</span>
+    </footer>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="app.js"></script>
+</body>
+</html>
