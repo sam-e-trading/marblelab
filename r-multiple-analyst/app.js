@@ -22,10 +22,13 @@
 
   function parseNumber(value) {
     if (typeof value === "number" && Number.isFinite(value)) return value;
-    const text = clean(value).replace(/,/g, "");
+    let text = clean(value).replace(/,/g, "").replace(/[−–—]/g, "-");
     if (!text) return 0;
+    const parenthesisedNegative = /^\((.*)\)$/.test(text);
+    if (parenthesisedNegative) text = text.replace(/^\((.*)\)$/, "$1");
     const n = Number(text);
-    return Number.isFinite(n) ? n : 0;
+    if (!Number.isFinite(n)) return 0;
+    return parenthesisedNegative ? -Math.abs(n) : n;
   }
 
   function parseDate(value) {
@@ -277,7 +280,7 @@
     if (!firstSheetName) throw new Error("Workbook has no worksheets.");
     return root.XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName], {
       header: 1,
-      raw: false,
+      raw: true,
       defval: "",
       blankrows: false
     });
