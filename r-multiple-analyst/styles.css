@@ -50,6 +50,10 @@ label { display: grid; gap: 8px; color: var(--honest-green); font-weight: 800; m
 .tip:focus { outline: 2px solid var(--fresh-green); outline-offset: 2px; }
 input { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 12px 13px; background: rgba(0,0,0,.24); color: var(--white); }
 input[type="file"] { padding: 11px; color: var(--muted); }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--fresh-green); }
+.option-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid var(--border); border-radius: 18px; padding: 13px 14px; background: rgba(255,255,255,.045); }
+.option-row > span { display: grid; gap: 3px; }
+.option-row small { color: var(--muted); font-weight: 700; line-height: 1.35; }
 button { border: 0; border-radius: 14px; padding: 12px 14px; background: var(--fresh-green); color: var(--trust-black); font-weight: 900; cursor: pointer; }
 button:hover { filter: brightness(1.04); transform: translateY(-1px); }
 button.ghost { background: transparent; color: var(--white); border: 1px solid var(--border); }

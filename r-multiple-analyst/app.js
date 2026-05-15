@@ -197,6 +197,91 @@
     return trades;
   }
 
+  function combineStopDiagnostics(trades) {
+    const unique = [...new Set(trades.map((trade) => trade.stopDiagnostic).filter(Boolean))];
+    if (!unique.length) return "n/a";
+    if (unique.length === 1) return unique[0];
+    const adverse = trades.filter((trade) => trade.stopDiagnostic === "adverse stop").length;
+    return `${adverse}/${trades.length} adverse stops`;
+  }
+
+  function groupScaledTrades(trades) {
+    const bySymbol = new Map();
+    trades.forEach((trade, index) => {
+      const symbol = trade.symbol || "Unknown";
+      if (!bySymbol.has(symbol)) bySymbol.set(symbol, []);
+      bySymbol.get(symbol).push({ trade, index, openDate: parseDate(trade.openTime), closeDate: parseDate(trade.closeTime) });
+    });
+
+    const groups = [];
+    bySymbol.forEach((symbolTrades) => {
+      const dated = symbolTrades.filter((item) => item.openDate && item.closeDate)
+        .sort((a, b) => a.openDate - b.openDate || a.closeDate - b.closeDate || a.index - b.index);
+      const undated = symbolTrades.filter((item) => !item.openDate || !item.closeDate);
+
+      let current = null;
+      dated.forEach((item) => {
+        if (!current || item.openDate > current.closeDate) {
+          current = { firstIndex: item.index, closeDate: item.closeDate, trades: [item.trade] };
+          groups.push(current);
+          return;
+        }
+        current.trades.push(item.trade);
+        current.firstIndex = Math.min(current.firstIndex, item.index);
+        if (item.closeDate > current.closeDate) current.closeDate = item.closeDate;
+      });
+
+      undated.forEach((item) => {
+        const fallback = groups.find((group) => group.trades[0]?.symbol === item.trade.symbol && group.trades[0]?.openTime === item.trade.openTime);
+        if (fallback) {
+          fallback.trades.push(item.trade);
+          fallback.firstIndex = Math.min(fallback.firstIndex, item.index);
+        } else {
+          groups.push({ firstIndex: item.index, closeDate: item.closeDate, trades: [item.trade] });
+        }
+      });
+    });
+
+    return groups
+      .sort((a, b) => a.firstIndex - b.firstIndex)
+      .map(({ trades: group }) => {
+        if (group.length === 1) return { ...group[0], scaleCount: 1 };
+
+        const first = group[0];
+        const latestClose = group.reduce((latest, trade) => {
+          const currentDate = parseDate(trade.closeTime);
+          if (!currentDate) return latest;
+          if (!latest.date || currentDate > latest.date) return { text: trade.closeTime, date: currentDate };
+          return latest;
+        }, { text: first.closeTime, date: parseDate(first.closeTime) });
+        const closeDate = latestClose.date;
+        const openDate = parseDate(first.openTime);
+        const netPnL = sum(group, "netPnL");
+        const profit = sum(group, "profit");
+        const commission = sum(group, "commission");
+        const swap = sum(group, "swap");
+        const rMultiple = sum(group, "rMultiple");
+        const types = [...new Set(group.map((trade) => trade.type).filter(Boolean))];
+
+        return {
+          ...first,
+          position: group.map((trade) => trade.position).filter(Boolean).join(" + ") || `${group.length} positions`,
+          type: types.length === 1 ? types[0] : "mixed",
+          volume: sum(group, "volume"),
+          closeTime: latestClose.text,
+          commission,
+          swap,
+          profit,
+          netPnL,
+          rMultiple,
+          outcome: netPnL > EPSILON ? "win" : netPnL < -EPSILON ? "loss" : "breakeven",
+          stopDiagnostic: combineStopDiagnostics(group),
+          holdingMinutes: openDate && closeDate ? (closeDate.getTime() - openDate.getTime()) / 60000 : null,
+          scaleCount: group.length
+        };
+      });
+  }
+
   function summariseGroup(trades) {
     const netPnL = sum(trades, "netPnL");
     const totalR = sum(trades, "rMultiple");
@@ -286,14 +371,15 @@
     });
   }
 
-  function analyseRows(rows, oneR) {
+  function analyseRows(rows, oneR, options = {}) {
     if (!Number.isFinite(oneR) || oneR <= 0) {
       throw new Error("Enter a fixed 1R dollar value greater than zero.");
     }
-    const trades = parsePositions(rows, oneR);
-    if (!trades.length) {
+    const positions = parsePositions(rows, oneR);
+    if (!positions.length) {
       throw new Error("No closed positions were found in the Positions section.");
     }
+    const trades = options.scaleMode ? groupScaledTrades(positions) : positions;
     return { trades, stats: calculateStats(trades) };
   }
 
@@ -313,7 +399,7 @@
     setText("profit-factor", stats.profitFactor === Infinity ? "∞" : formatNumber(stats.profitFactor));
     setText("best-worst", `${formatR(stats.bestTradeR)} / ${formatR(stats.worstTradeR)}`);
     setText("total-r", formatR(stats.totalR));
-    setText("total-context", `${formatMoney(stats.netPnL)} across ${stats.trades} trades`);
+    setText("total-context", `${formatMoney(stats.netPnL)} across ${stats.trades} ${stats.trades === 1 ? "trade" : "trades"}`);
     setClassByValue("total-r", stats.totalR);
     const card = document.getElementById("result-card");
     if (card) card.classList.toggle("negative", stats.totalR < -EPSILON);
@@ -379,7 +465,7 @@
       <thead><tr><th>Open time</th><th>Position</th><th>Symbol</th><th>Side</th><th>Volume</th><th>Net P/L</th><th>R</th><th>Hold</th><th>S/L diagnostic</th><th>Close time</th></tr></thead>
       <tbody>${trades.map((trade) => `<tr>
         <td>${escapeHtml(trade.openTime)}</td>
-        <td>${escapeHtml(trade.position)}</td>
+        <td>${escapeHtml(trade.scaleCount > 1 ? `${trade.scaleCount} scaled positions` : trade.position)}</td>
         <td><strong>${escapeHtml(trade.symbol)}</strong></td>
         <td>${escapeHtml(trade.type)}</td>
         <td>${formatNumber(trade.volume, 2)}</td>
@@ -446,7 +532,8 @@
     renderBreakdown("side-breakdown", result.stats.sideBreakdown);
     renderTrades(result.stats.topTrades);
     drawCurve(result.trades);
-    status(`Parsed ${result.stats.trades} positions from ${state.fileName || "the workbook"}. Fixed-risk results use the entered 1R value only.`);
+    const scaleMode = Boolean(document.getElementById("scale-mode")?.checked);
+    status(`Parsed ${result.stats.trades} ${scaleMode ? "scale-grouped trades" : "positions"} from ${state.fileName || "the workbook"}. Fixed-risk results use the entered 1R value only.`);
   }
 
   async function readSelectedFile(file) {
@@ -459,13 +546,14 @@
   async function handleAnalyse() {
     try {
       const oneR = parseNumber(document.getElementById("one-r").value);
+      const scaleMode = Boolean(document.getElementById("scale-mode")?.checked);
       const input = document.getElementById("statement-file");
       if (!state.rows.length) {
         if (!input.files || !input.files[0]) throw new Error("Choose an MT5 XLSX statement first.");
         state.fileName = input.files[0].name;
         state.rows = await readSelectedFile(input.files[0]);
       }
-      render(analyseRows(state.rows, oneR));
+      render(analyseRows(state.rows, oneR, { scaleMode }));
     } catch (error) {
       status(error.message, true);
     }
@@ -478,6 +566,8 @@
     state.stats = null;
     const file = document.getElementById("statement-file");
     if (file) file.value = "";
+    const scaleMode = document.getElementById("scale-mode");
+    if (scaleMode) scaleMode.checked = false;
     status("Choose an MT5 XLSX statement, enter the fixed dollar value for 1R, then run the analysis.");
     renderStats(calculateStats([]));
     renderBreakdown("symbol-breakdown", []);
@@ -494,6 +584,7 @@
     const reset = document.getElementById("reset");
     const file = document.getElementById("statement-file");
     const oneR = document.getElementById("one-r");
+    const scaleMode = document.getElementById("scale-mode");
     if (analyse) analyse.addEventListener("click", handleAnalyse);
     if (reset) reset.addEventListener("click", resetUi);
     if (file) file.addEventListener("change", () => {
@@ -504,6 +595,9 @@
     if (oneR) oneR.addEventListener("input", () => {
       if (state.rows.length) handleAnalyse();
     });
+    if (scaleMode) scaleMode.addEventListener("change", () => {
+      if (state.rows.length) handleAnalyse();
+    });
     resetUi();
   }
 
@@ -511,6 +605,7 @@
     analyseRows,
     calculateStats,
     parsePositions,
+    groupScaledTrades,
     findPositionsHeader,
     formatR,
     formatMoney

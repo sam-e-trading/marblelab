@@ -45,6 +45,10 @@
           <input id="one-r" type="number" min="0.01" step="0.01" value="100" />
         </label>
 
+        <label class="option-row"><span><span class="label-row"><span>Scale mode</span><span class="tip" tabindex="0" data-tip="When enabled, closed positions on the same symbol with overlapping open periods are grouped into one trade. This covers scale-ins opened later at different prices while the original trade is still open. Net P/L, R, and volume are summed; the latest close time is used for holding period.">?</span></span><small>Group same-symbol positions that overlap in time.</small></span>
+          <input id="scale-mode" type="checkbox" />
+        </label>
+
         <button id="analyse">Analyse statement</button>
         <p class="note">This v1 does not infer original R from stop loss. It assumes the same planned dollar risk for every trade in the uploaded statement, so varied-risk accounts will be approximate.</p>
         <p class="note">Net P/L is calculated as profit + commission + swap when those fields exist. Stop-loss data is shown only as a diagnostic flag.</p>
