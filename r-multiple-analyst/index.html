@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>R-Multiple Analyst — Marble Lab</title>
-  <meta name="description" content="Upload an MT5 XLSX statement and review trades in fixed-dollar R multiples." />
+  <meta name="description" content="Upload an MT5 XLSX statement and review trades in R multiples using planned stop-loss risk or an estimated median gross loss." />
   <meta property="og:title" content="R-Multiple Analyst" />
-  <meta property="og:description" content="Analyse MT5 closed positions using a user-entered fixed 1R dollar value." />
+  <meta property="og:description" content="Analyse MT5 closed positions using stop-loss risk or an estimated median gross loss as 1R." />
   <meta property="og:type" content="website" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -21,7 +21,7 @@
       <div>
         <p class="eyebrow">Statement review</p>
         <h1>R-Multiple Analyst</h1>
-        <p class="lede">Upload an MT5 XLSX trade history statement and convert closed positions into R using one fixed dollar value for 1R.</p>
+        <p class="lede">Upload an MT5 XLSX trade history statement and convert closed positions into R using your planned stop-loss risk, or a median gross-loss estimate when exact risk is missing.</p>
       </div>
       <div class="score-card" id="result-card">
         <span>Total result</span>
@@ -41,21 +41,30 @@
           <input id="statement-file" type="file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
         </label>
 
-        <label><span class="label-row"><span>Fixed 1R dollar value</span><span class="tip" tabindex="0" data-tip="Every trade uses this one account-wide planned risk value. Example: if 1R is $100 and a trade nets $250, the result is +2.50R.">?</span></span>
-          <input id="one-r" type="number" min="0.01" step="0.01" value="100" />
+        <label><span class="label-row"><span>R method</span><span class="tip" tabindex="0" data-tip="Best default: use the gross dollar loss you planned if the stop-loss is hit. If that is missing, estimate 1R from the median gross loss in the statement.">?</span></span>
+          <select id="r-method">
+            <option value="plannedStop" selected>Stop-loss max loss</option>
+            <option value="medianGrossLoss">Median gross loss estimate</option>
+            <option value="fixedDollar">Fixed 1R dollar value</option>
+          </select>
         </label>
+
+        <label id="r-value-row"><span class="label-row"><span id="r-value-label">Max loss if stop is hit</span><span class="tip" tabindex="0" data-tip="Example: if the planned gross max loss at the stop is $50, then 1R = $50. A trade netting $100 is +2.00R; a trade losing $25 is -0.50R.">?</span></span>
+          <input id="one-r" type="number" min="0.01" step="0.01" value="50" />
+        </label>
+
+        <p id="r-method-note" class="inline-note">Default: 1R is the gross dollar loss expected if the stop-loss is hit.</p>
 
         <label class="option-row"><span><span class="label-row"><span>Scale mode</span><span class="tip" tabindex="0" data-tip="When enabled, closed positions on the same symbol with overlapping open periods are grouped into one trade. This covers scale-ins opened later at different prices while the original trade is still open. Net P/L, R, and volume are summed; the latest close time is used for holding period.">?</span></span><small>Group same-symbol positions that overlap in time.</small></span>
           <input id="scale-mode" type="checkbox" />
         </label>
 
         <button id="analyse">Analyse statement</button>
-        <p class="note">This v1 does not infer original R from stop loss. It assumes the same planned dollar risk for every trade in the uploaded statement, so varied-risk accounts will be approximate.</p>
-        <p class="note">Net P/L is calculated as profit + commission + swap when those fields exist. Stop-loss data is shown only as a diagnostic flag.</p>
+        <p class="note">Net P/L is calculated as profit + commission + swap when those fields exist. Median mode estimates 1R from losing trades’ gross profit/loss field before commission and swap.</p>
       </aside>
 
       <section class="panel dashboard">
-        <div id="status" class="status">Choose an MT5 XLSX statement, enter the fixed dollar value for 1R, then run the analysis.</div>
+        <div id="status" class="status">Choose an MT5 XLSX statement, choose an R method, then run the analysis.</div>
 
         <div class="stats">
           <article><span id="trades">0</span><small>trades</small></article>
@@ -73,7 +82,7 @@
         <div class="chart-wrap">
           <div class="panel-head compact">
             <h2>Cumulative R curve</h2>
-            <span id="chart-note" class="pill">fixed 1R</span>
+            <span id="chart-note" class="pill">stop-loss 1R</span>
           </div>
           <canvas id="equity-chart" width="1180" height="320" aria-label="Cumulative R equity curve"></canvas>
         </div>
@@ -112,8 +121,9 @@
     <section class="panel explainer">
       <h2>Important assumptions</h2>
       <ol>
-        <li><strong>Fixed-risk v1:</strong> this tool uses your entered dollar value as 1R for every closed position in the statement.</li>
-        <li><strong>Stop loss is diagnostic only:</strong> moved, breakeven, missing, or non-adverse stops are flagged but never used as the source of R.</li>
+        <li><strong>Preferred default:</strong> use the gross dollar loss you planned if the stop-loss is hit. If that loss is $50, then 1R = $50.</li>
+        <li><strong>Fallback estimate:</strong> when planned risk is missing, median gross loss estimates 1R from losing trades in the statement. It is labelled as estimated because it infers risk after the fact.</li>
+        <li><strong>MT5 S/L prices are diagnostic:</strong> moved, breakeven, missing, or non-adverse stops are flagged, but the statement usually does not preserve the original dollar risk cleanly.</li>
         <li><strong>Future Phase 2:</strong> a later MT5 EA or algo export could record max gross loss, original per-trade risk, MAE/MFE, and intended 1R so users can upload that alongside the statement for more accurate per-trade R.</li>
         <li><strong>Educational use only:</strong> outputs are for trade review and learning, not financial advice or a recommendation to trade.</li>
       </ol>

@@ -106,7 +106,12 @@ Later, build or support an MT5 algo/EA/export that records better original-risk 
 
 Then allow the user to upload that alongside the statement for more accurate per-trade R analysis.
 
-## MVP decision
-Use fixed-dollar 1R input for all trades in the uploaded statement.
+## R method decision update
+Default user-facing methods:
 
-Recommended MVP: simple upload + `1R = $___` input + clear caveat that fixed-risk assumption is used across all trades.
+1. **Stop-loss max loss** — preferred default. User enters the gross dollar loss expected if the stop-loss is hit. Example: if the planned max loss at stop is `$50`, then `1R = $50`.
+2. **Median gross loss estimate** — fallback when exact planned risk is missing. The tool estimates `1R` from the median absolute gross loss of losing trades in the statement. This must be labelled as estimated because it infers risk after the fact.
+
+Keep **Fixed 1R dollar value** as a compatibility/manual mode for users who already know their account-wide 1R.
+
+Current implementation: upload + R method selector + clear caveat that median mode is approximate.

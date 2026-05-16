@@ -8,7 +8,8 @@
     rows: [],
     fileName: "",
     trades: [],
-    stats: null
+    stats: null,
+    rBasis: null
   };
 
   function clean(value) {
@@ -63,6 +64,13 @@
   function formatNumber(value, digits = 2) {
     if (!Number.isFinite(value)) return "0.00";
     return value.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  }
+
+  function median(values) {
+    const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+    if (!sorted.length) return 0;
+    const middle = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
   }
 
   function formatDuration(minutes) {
@@ -123,7 +131,7 @@
     return "unreadable stop";
   }
 
-  function parsePositions(rows, oneR) {
+  function parsePositions(rows) {
     const found = findPositionsHeader(rows);
     if (!found) {
       throw new Error("Could not find a Positions table with MT5 columns.");
@@ -165,7 +173,6 @@
       const swap = parseNumber(row[columns.swap]);
       const profit = parseNumber(row[columns.profit]);
       const netPnL = profit + commission + swap;
-      const rMultiple = netPnL / oneR;
       const entryPrice = parseNumber(row[columns.entryPrice]);
       const closePrice = parseNumber(row[columns.closePrice]);
       const stopLoss = parseNumber(row[columns.stopLoss]);
@@ -187,7 +194,7 @@
         swap,
         profit,
         netPnL,
-        rMultiple,
+        rMultiple: 0,
         outcome: netPnL > EPSILON ? "win" : netPnL < -EPSILON ? "loss" : "breakeven",
         stopDiagnostic: diagnostic,
         holdingMinutes
@@ -195,6 +202,49 @@
     }
 
     return trades;
+  }
+
+  function rMethodLabel(method) {
+    if (method === "medianGrossLoss") return "median gross loss estimate";
+    if (method === "fixedDollar") return "fixed dollar 1R";
+    return "stop-loss max loss";
+  }
+
+  function deriveOneR(positions, rConfig = {}) {
+    const method = rConfig.method || "plannedStop";
+    if (method === "medianGrossLoss") {
+      const grossLosses = positions
+        .map((trade) => trade.profit)
+        .filter((profit) => profit < -EPSILON)
+        .map((profit) => Math.abs(profit));
+      const oneR = median(grossLosses);
+      if (!Number.isFinite(oneR) || oneR <= EPSILON) {
+        throw new Error("Median gross loss needs at least one losing trade in the statement.");
+      }
+      return {
+        method,
+        oneR,
+        estimated: true,
+        label: "Estimated 1R from median gross loss",
+        detail: `${formatMoney(oneR)} median gross loss from ${grossLosses.length} losing ${grossLosses.length === 1 ? "trade" : "trades"}`
+      };
+    }
+
+    const oneR = parseNumber(rConfig.oneR);
+    if (!Number.isFinite(oneR) || oneR <= 0) {
+      throw new Error(method === "plannedStop" ? "Enter the gross max loss if the stop-loss is hit." : "Enter a fixed 1R dollar value greater than zero.");
+    }
+    return {
+      method,
+      oneR,
+      estimated: false,
+      label: method === "plannedStop" ? "1R from stop-loss max loss" : "Fixed 1R dollar value",
+      detail: `${formatMoney(oneR)} ${method === "plannedStop" ? "planned gross loss at stop" : "per 1R"}`
+    };
+  }
+
+  function applyRMultiples(trades, oneR) {
+    return trades.map((trade) => ({ ...trade, rMultiple: trade.netPnL / oneR }));
   }
 
   function combineStopDiagnostics(trades) {
@@ -371,16 +421,16 @@
     });
   }
 
-  function analyseRows(rows, oneR, options = {}) {
-    if (!Number.isFinite(oneR) || oneR <= 0) {
-      throw new Error("Enter a fixed 1R dollar value greater than zero.");
-    }
-    const positions = parsePositions(rows, oneR);
+  function analyseRows(rows, rConfig, options = {}) {
+    const legacyConfig = typeof rConfig === "number" ? { method: "fixedDollar", oneR: rConfig } : rConfig;
+    const positions = parsePositions(rows);
     if (!positions.length) {
       throw new Error("No closed positions were found in the Positions section.");
     }
-    const trades = options.scaleMode ? groupScaledTrades(positions) : positions;
-    return { trades, stats: calculateStats(trades) };
+    const rBasis = deriveOneR(positions, legacyConfig);
+    const positionsWithR = applyRMultiples(positions, rBasis.oneR);
+    const trades = options.scaleMode ? groupScaledTrades(positionsWithR) : positionsWithR;
+    return { trades, stats: calculateStats(trades), rBasis };
   }
 
   function renderStats(stats) {
@@ -527,13 +577,15 @@
   function render(result) {
     state.trades = result.trades;
     state.stats = result.stats;
+    state.rBasis = result.rBasis;
     renderStats(result.stats);
     renderBreakdown("symbol-breakdown", result.stats.symbolBreakdown);
     renderBreakdown("side-breakdown", result.stats.sideBreakdown);
     renderTrades(result.stats.topTrades);
     drawCurve(result.trades);
     const scaleMode = Boolean(document.getElementById("scale-mode")?.checked);
-    status(`Parsed ${result.stats.trades} ${scaleMode ? "scale-grouped trades" : "positions"} from ${state.fileName || "the workbook"}. Fixed-risk results use the entered 1R value only.`);
+    const basis = result.rBasis ? `${result.rBasis.label}: ${result.rBasis.detail}.` : "";
+    status(`Parsed ${result.stats.trades} ${scaleMode ? "scale-grouped trades" : "positions"} from ${state.fileName || "the workbook"}. ${basis}`);
   }
 
   async function readSelectedFile(file) {
@@ -545,6 +597,7 @@
 
   async function handleAnalyse() {
     try {
+      const method = document.getElementById("r-method")?.value || "plannedStop";
       const oneR = parseNumber(document.getElementById("one-r").value);
       const scaleMode = Boolean(document.getElementById("scale-mode")?.checked);
       const input = document.getElementById("statement-file");
@@ -553,7 +606,7 @@
         state.fileName = input.files[0].name;
         state.rows = await readSelectedFile(input.files[0]);
       }
-      render(analyseRows(state.rows, oneR, { scaleMode }));
+      render(analyseRows(state.rows, { method, oneR }, { scaleMode }));
     } catch (error) {
       status(error.message, true);
     }
@@ -564,11 +617,17 @@
     state.fileName = "";
     state.trades = [];
     state.stats = null;
+    state.rBasis = null;
     const file = document.getElementById("statement-file");
     if (file) file.value = "";
+    const rMethod = document.getElementById("r-method");
+    if (rMethod) rMethod.value = "plannedStop";
+    const oneR = document.getElementById("one-r");
+    if (oneR) oneR.value = "50";
     const scaleMode = document.getElementById("scale-mode");
     if (scaleMode) scaleMode.checked = false;
-    status("Choose an MT5 XLSX statement, enter the fixed dollar value for 1R, then run the analysis.");
+    updateRMethodUi();
+    status("Choose an MT5 XLSX statement, choose an R method, then run the analysis.");
     renderStats(calculateStats([]));
     renderBreakdown("symbol-breakdown", []);
     renderBreakdown("side-breakdown", []);
@@ -578,12 +637,28 @@
     setText("total-context", "Upload a statement to begin");
   }
 
+  function updateRMethodUi() {
+    const method = document.getElementById("r-method")?.value || "plannedStop";
+    const row = document.getElementById("r-value-row");
+    const label = document.getElementById("r-value-label");
+    const note = document.getElementById("r-method-note");
+    if (row) row.hidden = method === "medianGrossLoss";
+    if (label) label.textContent = method === "fixedDollar" ? "Fixed 1R dollar value" : "Max loss if stop is hit";
+    if (note) {
+      if (method === "medianGrossLoss") note.textContent = "Estimated mode: 1R is the median absolute gross loss from losing trades. Useful when planned stop-risk is missing, but approximate.";
+      else if (method === "fixedDollar") note.textContent = "Fixed mode: every trade uses this one dollar value as 1R.";
+      else note.textContent = "Default: 1R is the gross dollar loss expected if the stop-loss is hit.";
+    }
+    setText("chart-note", `${rMethodLabel(method)} 1R`);
+  }
+
   function init() {
     if (!root.document) return;
     const analyse = document.getElementById("analyse");
     const reset = document.getElementById("reset");
     const file = document.getElementById("statement-file");
     const oneR = document.getElementById("one-r");
+    const rMethod = document.getElementById("r-method");
     const scaleMode = document.getElementById("scale-mode");
     if (analyse) analyse.addEventListener("click", handleAnalyse);
     if (reset) reset.addEventListener("click", resetUi);
@@ -593,6 +668,10 @@
       status(state.fileName ? `${state.fileName} selected. Run the analysis when ready.` : "Choose an MT5 XLSX statement first.");
     });
     if (oneR) oneR.addEventListener("input", () => {
+      if (state.rows.length) handleAnalyse();
+    });
+    if (rMethod) rMethod.addEventListener("change", () => {
+      updateRMethodUi();
       if (state.rows.length) handleAnalyse();
     });
     if (scaleMode) scaleMode.addEventListener("change", () => {
@@ -606,6 +685,8 @@
     calculateStats,
     parsePositions,
     groupScaledTrades,
+    deriveOneR,
+    applyRMultiples,
     findPositionsHeader,
     formatR,
     formatMoney

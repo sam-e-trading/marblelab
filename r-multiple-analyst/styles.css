@@ -48,7 +48,9 @@ label { display: grid; gap: 8px; color: var(--honest-green); font-weight: 800; m
 .tip::before { content: ''; position: absolute; left: 50%; bottom: calc(100% + 4px); transform: translateX(-50%); border: 6px solid transparent; border-top-color: rgba(28,37,43,.98); opacity: 0; transition: opacity .15s ease; z-index: 11; }
 .tip:hover::after, .tip:focus::after, .tip:hover::before, .tip:focus::before { opacity: 1; transform: translateX(-50%) translateY(0); }
 .tip:focus { outline: 2px solid var(--fresh-green); outline-offset: 2px; }
-input { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 12px 13px; background: rgba(0,0,0,.24); color: var(--white); }
+input, select { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 12px 13px; background: rgba(0,0,0,.24); color: var(--white); }
+select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--fresh-green) 50%), linear-gradient(135deg, var(--fresh-green) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-right: 36px; }
+select option { color: var(--trust-black); }
 input[type="file"] { padding: 11px; color: var(--muted); }
 input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--fresh-green); }
 .option-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid var(--border); border-radius: 18px; padding: 13px 14px; background: rgba(255,255,255,.045); }
@@ -59,6 +61,7 @@ button:hover { filter: brightness(1.04); transform: translateY(-1px); }
 button.ghost { background: transparent; color: var(--white); border: 1px solid var(--border); }
 .note, .subtle { color: var(--muted); line-height: 1.45; font-size: .9rem; }
 .note { margin: 18px 0 0; }
+.inline-note { margin: -6px 0 16px; color: var(--muted); line-height: 1.4; font-size: .86rem; }
 .status { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 18px; background: rgba(255,255,255,.045); padding: 14px 16px; color: var(--honest-green); line-height: 1.45; }
 .status.warning { color: var(--bold-orange); }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
