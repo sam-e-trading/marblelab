@@ -427,9 +427,9 @@
     if (!positions.length) {
       throw new Error("No closed positions were found in the Positions section.");
     }
-    const rBasis = deriveOneR(positions, legacyConfig);
-    const positionsWithR = applyRMultiples(positions, rBasis.oneR);
-    const trades = options.scaleMode ? groupScaledTrades(positionsWithR) : positionsWithR;
+    const baseTrades = options.scaleMode ? groupScaledTrades(positions) : positions;
+    const rBasis = deriveOneR(baseTrades, legacyConfig);
+    const trades = applyRMultiples(baseTrades, rBasis.oneR);
     return { trades, stats: calculateStats(trades), rBasis };
   }
 

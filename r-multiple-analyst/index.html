@@ -55,7 +55,7 @@
 
         <p id="r-method-note" class="inline-note">Default: 1R is the gross dollar loss expected if the stop-loss is hit.</p>
 
-        <label class="option-row"><span><span class="label-row"><span>Scale mode</span><span class="tip" tabindex="0" data-tip="When enabled, closed positions on the same symbol with overlapping open periods are grouped into one trade. This covers scale-ins opened later at different prices while the original trade is still open. Net P/L, R, and volume are summed; the latest close time is used for holding period.">?</span></span><small>Group same-symbol positions that overlap in time.</small></span>
+        <label class="option-row"><span><span class="label-row"><span>Scale / combined mode</span><span class="tip" tabindex="0" data-tip="When enabled, closed positions on the same symbol with overlapping open periods are grouped into one combined trade before R is calculated. Median gross-loss mode estimates 1R from those combined trade results, not from each partial scale-in line.">?</span></span><small>Group overlapping same-symbol positions, then calculate R on the combined result.</small></span>
           <input id="scale-mode" type="checkbox" />
         </label>
 

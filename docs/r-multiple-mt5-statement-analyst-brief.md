@@ -114,4 +114,4 @@ Default user-facing methods:
 
 Keep **Fixed 1R dollar value** as a compatibility/manual mode for users who already know their account-wide 1R.
 
-Current implementation: upload + R method selector + clear caveat that median mode is approximate.
+Current implementation: upload + R method selector + clear caveat that median mode is approximate. If scale/combined mode is enabled, overlapping same-symbol positions are grouped first and R is calculated from the combined trade result; median gross loss is also estimated from combined losing trade results rather than individual partial scale-in lines.
