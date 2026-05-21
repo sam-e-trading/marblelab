@@ -10,18 +10,18 @@ Show the gross R impact of scaling into a trade at fixed ATR intervals. The v1 m
 
 - Stop distance (ATR)
 - Scale-in every (ATR)
-- Maximum scale-ins
+- Maximum additional scale-ins
 - Selected total move (ATR)
 - Comparison moves as CSV/list, with an auto-generated simple series option
 
 ## Formula
 
 ```text
-entries = 0 ATR, then every scale-in distance up to and including total move, capped by maximum scale-ins
+entries = 0 ATR, then every scale-in distance up to and including total move, capped by maximum additional scale-ins
 P&L per entry = max(totalMoveATR - entryATR, 0) / stopDistanceATR R
 gross unit-R = sum(P&L per entry)
 normalised trade R = gross unit-R / total entries
-scale-ins = entries - 1
+additional scale-ins = total entries - 1
 ```
 
 ## Included Presets

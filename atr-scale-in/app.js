@@ -122,13 +122,13 @@ function autoSeries() {
 
 function renderStats(inputs, result) {
   el('selected-total-r').textContent = formatR(result.normalisedR);
-  el('selected-context').textContent = `${result.entryCount} entries · ${result.scaleIns} scale-ins`;
+  el('selected-context').textContent = `${result.entryCount} total entries · 1 initial + ${result.scaleIns} scale-ins`;
   el('stat-total-r').textContent = formatR(result.normalisedR);
   el('stat-gross-r').textContent = formatR(result.grossUnitR);
   el('stat-entries').textContent = result.entryCount;
   el('stat-scale-ins').textContent = result.scaleIns;
-  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, and a ${inputs.maxScaleIns} scale-in cap averages ${formatR(result.normalisedR)} across ${result.entryCount} equal entries. The summed gross unit-R is ${formatR(result.grossUnitR)} before normalising.`;
-  el('comparison-note').textContent = `${formatAtr(inputs.stopDistance)} stop · every ${formatAtr(inputs.scaleDistance)} · max ${inputs.maxScaleIns} scale-ins`;
+  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, and ${inputs.maxScaleIns} additional scale-ins averages ${formatR(result.normalisedR)} across ${result.entryCount} total entries: 1 initial + ${result.scaleIns} scale-ins. The summed gross unit-R is ${formatR(result.grossUnitR)} before normalising.`;
+  el('comparison-note').textContent = `${formatAtr(inputs.stopDistance)} stop · every ${formatAtr(inputs.scaleDistance)} · max ${inputs.maxScaleIns} additional scale-ins`;
   el('ladder-note').textContent = `0 to ${formatAtr(inputs.totalMove)}`;
 }
 

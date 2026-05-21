@@ -176,7 +176,7 @@ Formula:
 P&L per entry = max(totalMoveATR - entryATR, 0) / stopDistanceATR R
 gross unit-R = sum(P&L per entry)
 normalised trade R = gross unit-R / total entries
-scale-ins = entries - 1, capped by maximum scale-ins
+additional scale-ins = total entries - 1, capped by maximum additional scale-ins
 ```
 
 ## Supporting docs
