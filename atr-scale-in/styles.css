@@ -128,3 +128,8 @@ button.ghost { background: transparent; color: var(--white); border: 1px solid v
   .bar-row, .ladder-row, .mini-row, .expectancy-row { grid-template-columns: 1fr; gap: 6px; }
   .bar-value, .ladder-r, .mini-value, .expectancy-value { text-align: left; }
 }
+.stop-explainer { margin-top: 16px; border: 1px solid var(--border); border-radius: 18px; background: rgba(255,255,255,.045); padding: 16px; }
+.stop-explainer h3 { margin: 0 0 10px; font-size: 1rem; }
+.stop-explainer ul { margin: 0; padding-left: 1.2rem; }
+.stop-explainer li { color: var(--muted); line-height: 1.55; margin: 8px 0; }
+.stop-explainer strong { color: var(--white); }

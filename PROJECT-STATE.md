@@ -157,7 +157,7 @@ Features:
 - scale-in distance in ATR
 - maximum number of scale-ins
 - scale-in sizing modes: equal, half-size adds, double-size adds, pyramid down, and custom sequence
-- stop-out risk models: original stop, breakeven on total position, ATR trailing stop, and stopped after X R pullback
+- stop-out risk models: original stop, combined breakeven stop, ATR trailing stop, and stopped after X R pullback
 - assumed losing trade R and expectancy target inputs
 - selected total move in ATR
 - user-defined comparison move series

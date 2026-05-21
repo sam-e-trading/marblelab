@@ -72,7 +72,7 @@
         <label>Stop-out model
           <select id="stop-model">
             <option value="original" selected>Original stop</option>
-            <option value="breakeven">Breakeven on total position</option>
+            <option value="breakeven">Combined breakeven stop</option>
             <option value="trailing">ATR trailing stop</option>
             <option value="rPullback">Stopped after X R pullback</option>
           </select>
@@ -161,6 +161,15 @@
       </div>
       <p id="stop-out-summary" class="subtle">If the trade is stopped at -1 ATR, the combined position would be -6.00R.</p>
       <div id="stop-risk-ladder" class="stop-risk-ladder" aria-label="Stop-out risk ladder"></div>
+      <div class="stop-explainer">
+        <h3>What the stop models mean</h3>
+        <ul>
+          <li><strong>Original stop:</strong> the stop stays behind the first entry. Every extra scale-in adds more exposure, so the loss can grow quickly.</li>
+          <li><strong>Combined breakeven stop:</strong> the stop is placed at the weighted average entry price, so all open entries together would be about 0R if stopped.</li>
+          <li><strong>ATR trailing stop:</strong> the stop sits a fixed ATR distance behind the selected total move. Example: 9 ATR move with a 1 ATR trail means stop at 8 ATR.</li>
+          <li><strong>Stopped after X R pullback:</strong> the stop is set X R back from the selected move, converted into ATR using the stop distance.</li>
+        </ul>
+      </div>
     </section>
 
     <section class="panel ladder-panel">
@@ -191,7 +200,7 @@
         <li><strong>Entry contribution:</strong> P&L per entry = size multiplier × max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
         <li><strong>Headline result:</strong> total R = summed weighted entry R across all entries. Average R per 1x unit is shown separately for context.</li>
         <li><strong>Required win rate:</strong> target expectancy uses win rate × average winner R − loss rate × assumed loser R. Costs and execution mess are not included, because goblins insist on arriving later.</li>
-        <li><strong>Stop-out risk:</strong> original stop keeps the first stop level, breakeven uses the weighted average entry, ATR trailing places the stop the chosen ATR distance behind the selected move, and X R pullback converts R into ATR using the stop distance.</li>
+        <li><strong>Stop-out risk:</strong> original stop keeps the first stop level, combined breakeven uses the weighted average entry so all entries together are around 0R if stopped, ATR trailing places the stop the chosen ATR distance behind the selected move, and X R pullback converts R into ATR using the stop distance.</li>
         <li><strong>Size multipliers:</strong> 1x means the original unit size. Custom sequences repeat the last value if there are more entries than values.</li>
         <li><strong>Scale-in count:</strong> additional scale-ins exclude the initial entry at 0 ATR. Total entries = 1 initial entry + additional scale-ins.</li>
         <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>

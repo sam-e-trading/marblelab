@@ -124,7 +124,7 @@ function expectancyAt(winRatePct, averageWinR, averageLossR) {
 function stopModelLabel(model) {
   return {
     original: 'original stop',
-    breakeven: 'breakeven on total position',
+    breakeven: 'combined breakeven stop',
     trailing: 'ATR trailing stop',
     rPullback: 'R pullback from current move'
   }[model] || 'original stop';
@@ -288,7 +288,7 @@ function renderStopOut(inputs, result) {
   el('stop-out-r').textContent = formatR(stop.stopOutR);
   el('stop-level').textContent = formatAtr(stop.stopLevel);
   el('weighted-entry').textContent = formatAtr(stop.weightedEntry);
-  el('stop-out-summary').textContent = `If the trade is stopped at ${formatAtr(stop.stopLevel)}, the combined position would be ${formatR(stop.stopOutR)}. Current selected target is ${formatAtr(inputs.totalMove)} with ${formatSize(result.totalSize)} total position size.`;
+  el('stop-out-summary').textContent = `If the trade is stopped at ${formatAtr(stop.stopLevel)}, all open entries combined would be ${formatR(stop.stopOutR)}. Current selected target is ${formatAtr(inputs.totalMove)} with ${formatSize(result.totalSize)} total position size.`;
 
   const minLevel = Math.min(stop.stopLevel, -inputs.stopDistance, 0);
   const maxLevel = Math.max(inputs.totalMove, ...result.entries.map(entry => entry.level), stop.stopLevel, 1);
