@@ -69,6 +69,18 @@
           <textarea id="size-sequence" rows="2" placeholder="1, 0.5, 0.25">1, 1, 1</textarea>
         </label>
 
+        <label>Stop-out model
+          <select id="stop-model">
+            <option value="original" selected>Original stop</option>
+            <option value="breakeven">Breakeven on total position</option>
+            <option value="trailing">ATR trailing stop</option>
+          </select>
+        </label>
+
+        <label>Trailing stop distance (ATR)
+          <input id="trailing-stop-distance" type="number" min="0.1" max="50" step="0.1" value="1" />
+        </label>
+
         <label>Assumed losing trade (R)
           <input id="assumed-loss-r" type="number" min="0.01" max="20" step="0.1" value="1" />
         </label>
@@ -129,6 +141,23 @@
       <div id="expectancy-table" class="expectancy-table" aria-label="Required win rate by expectancy target"></div>
     </section>
 
+    <section class="panel stop-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Stop-out risk</h2>
+          <p id="stop-model-note" class="subtle">original stop · stop at -1 ATR</p>
+        </div>
+        <span class="pill">if stopped now</span>
+      </div>
+      <div class="stop-summary">
+        <article><span id="stop-out-r">-6.00R</span><small>R if stopped</small></article>
+        <article><span id="stop-level">-1 ATR</span><small>stop level</small></article>
+        <article><span id="weighted-entry">1 ATR</span><small>weighted entry</small></article>
+      </div>
+      <p id="stop-out-summary" class="subtle">If the trade is stopped at -1 ATR, the combined position would be -6.00R.</p>
+      <div id="stop-risk-ladder" class="stop-risk-ladder" aria-label="Stop-out risk ladder"></div>
+    </section>
+
     <section class="panel ladder-panel">
       <div class="panel-head">
         <div>
@@ -157,6 +186,7 @@
         <li><strong>Entry contribution:</strong> P&L per entry = size multiplier × max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
         <li><strong>Headline result:</strong> total R = summed weighted entry R across all entries. Average R per 1x unit is shown separately for context.</li>
         <li><strong>Required win rate:</strong> target expectancy uses win rate × average winner R − loss rate × assumed loser R. Costs and execution mess are not included, because goblins insist on arriving later.</li>
+        <li><strong>Stop-out risk:</strong> original stop keeps the first stop level, breakeven uses the weighted average entry, and ATR trailing places the stop the chosen ATR distance behind the selected move.</li>
         <li><strong>Size multipliers:</strong> 1x means the original unit size. Custom sequences repeat the last value if there are more entries than values.</li>
         <li><strong>Scale-in count:</strong> additional scale-ins exclude the initial entry at 0 ATR. Total entries = 1 initial entry + additional scale-ins.</li>
         <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>

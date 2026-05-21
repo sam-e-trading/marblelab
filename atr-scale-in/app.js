@@ -121,6 +121,14 @@ function expectancyAt(winRatePct, averageWinR, averageLossR) {
   return (winProb * averageWinR) - ((1 - winProb) * averageLossR);
 }
 
+function stopModelLabel(model) {
+  return {
+    original: 'original stop',
+    breakeven: 'breakeven on total position',
+    trailing: 'ATR trailing stop'
+  }[model] || 'original stop';
+}
+
 function entryLevels(totalMove, scaleDistance, maxScaleIns) {
   const levels = [0];
   if (scaleDistance <= 0) return levels;
@@ -157,6 +165,25 @@ function calculateStructure(stopDistance, scaleDistance, totalMove, maxScaleIns,
   };
 }
 
+function calculateStopOut(result, inputs) {
+  const weightedEntry = result.totalSize
+    ? result.entries.reduce((sum, entry) => sum + (entry.level * entry.size), 0) / result.totalSize
+    : 0;
+  let stopLevel = -inputs.stopDistance;
+  if (inputs.stopModel === 'breakeven') stopLevel = weightedEntry;
+  if (inputs.stopModel === 'trailing') stopLevel = inputs.totalMove - inputs.trailingStopDistance;
+  stopLevel = Math.min(stopLevel, inputs.totalMove);
+  const stopOutR = result.entries.reduce((sum, entry) => {
+    return sum + (((stopLevel - entry.level) / inputs.stopDistance) * entry.size);
+  }, 0);
+  return {
+    stopLevel,
+    stopOutR,
+    weightedEntry,
+    modelLabel: stopModelLabel(inputs.stopModel)
+  };
+}
+
 function currentInputs() {
   const stopDistance = clamp(el('stop-distance').value, 0.1, 20, 1);
   const scaleDistance = clamp(el('scale-distance').value, 0.1, 20, 1);
@@ -164,10 +191,12 @@ function currentInputs() {
   const totalMove = clamp(el('total-move').value, 0, 100, 9);
   const sizingMode = el('sizing-mode').value;
   const sizeSequence = parseSizeSequence(el('size-sequence').value);
+  const stopModel = el('stop-model').value;
+  const trailingStopDistance = clamp(el('trailing-stop-distance').value, 0.1, 50, stopDistance);
   const assumedLossR = clamp(el('assumed-loss-r').value, 0.01, 20, 1);
   const expectancyTargets = parseTargetSeries(el('expectancy-targets').value, [0, 0.25, 0.5, 1]);
   const comparisonMoves = parseMoveSeries(el('comparison-moves').value, [3, 5, 7, 9]);
-  return { stopDistance, scaleDistance, maxScaleIns, totalMove, sizingMode, sizeSequence, assumedLossR, expectancyTargets, comparisonMoves };
+  return { stopDistance, scaleDistance, maxScaleIns, totalMove, sizingMode, sizeSequence, stopModel, trailingStopDistance, assumedLossR, expectancyTargets, comparisonMoves };
 }
 
 function applyPreset(key) {
@@ -250,6 +279,37 @@ function renderExpectancy(inputs, result) {
   }).join('');
 }
 
+function renderStopOut(inputs, result) {
+  const stop = calculateStopOut(result, inputs);
+  el('stop-model-note').textContent = `${stop.modelLabel} · stop at ${formatAtr(stop.stopLevel)}`;
+  el('stop-out-r').textContent = formatR(stop.stopOutR);
+  el('stop-level').textContent = formatAtr(stop.stopLevel);
+  el('weighted-entry').textContent = formatAtr(stop.weightedEntry);
+  el('stop-out-summary').textContent = `If the trade is stopped at ${formatAtr(stop.stopLevel)}, the combined position would be ${formatR(stop.stopOutR)}. Current selected target is ${formatAtr(inputs.totalMove)} with ${formatSize(result.totalSize)} total position size.`;
+
+  const minLevel = Math.min(stop.stopLevel, -inputs.stopDistance, 0);
+  const maxLevel = Math.max(inputs.totalMove, ...result.entries.map(entry => entry.level), stop.stopLevel, 1);
+  const span = Math.max(1, maxLevel - minLevel);
+  const leftFor = value => ((value - minLevel) / span) * 100;
+  const stopClass = stop.stopOutR < 0 ? 'danger' : stop.stopOutR > 0 ? 'good' : 'neutral';
+  el('stop-risk-ladder').innerHTML = `
+    <div class="risk-track">
+      <div class="risk-zone loss" style="left: 0%; width: ${leftFor(stop.weightedEntry)}%"></div>
+      <div class="risk-zone profit" style="left: ${leftFor(stop.weightedEntry)}%; width: ${100 - leftFor(stop.weightedEntry)}%"></div>
+      ${result.entries.map((entry, index) => `
+        <span class="risk-marker entry" style="left: ${leftFor(entry.level)}%" title="${index === 0 ? 'Initial' : `Scale ${index}`} · ${formatAtr(entry.level)} · ${formatSize(entry.size)}"></span>
+      `).join('')}
+      <span class="risk-marker current" style="left: ${leftFor(inputs.totalMove)}%" title="Current move ${formatAtr(inputs.totalMove)}"></span>
+      <span class="risk-marker stop ${stopClass}" style="left: ${leftFor(stop.stopLevel)}%" title="Stop ${formatAtr(stop.stopLevel)}"></span>
+    </div>
+    <div class="risk-legend">
+      <span>Stop: ${formatAtr(stop.stopLevel)}</span>
+      <span>Breakeven: ${formatAtr(stop.weightedEntry)}</span>
+      <span>Current: ${formatAtr(inputs.totalMove)}</span>
+    </div>
+  `;
+}
+
 function renderLadder(inputs, result) {
   const maxPnl = Math.max(...result.entries.map(entry => entry.pnlR), 1);
   const maxMove = Math.max(inputs.totalMove, inputs.scaleDistance, 1);
@@ -304,11 +364,12 @@ function render() {
   renderStats(inputs, result);
   renderMoveBars(inputs);
   renderExpectancy(inputs, result);
+  renderStopOut(inputs, result);
   renderLadder(inputs, result);
   renderPresetComparison(inputs);
 }
 
-['stop-distance', 'scale-distance', 'max-scale-ins', 'total-move', 'sizing-mode', 'size-sequence', 'assumed-loss-r', 'expectancy-targets', 'comparison-moves'].forEach(id => {
+['stop-distance', 'scale-distance', 'max-scale-ins', 'total-move', 'sizing-mode', 'size-sequence', 'stop-model', 'trailing-stop-distance', 'assumed-loss-r', 'expectancy-targets', 'comparison-moves'].forEach(id => {
   el(id).addEventListener('input', () => {
     document.querySelectorAll('.preset').forEach(button => button.classList.remove('active'));
     render();

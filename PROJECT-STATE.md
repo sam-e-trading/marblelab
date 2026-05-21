@@ -157,6 +157,7 @@ Features:
 - scale-in distance in ATR
 - maximum number of scale-ins
 - scale-in sizing modes: equal, half-size adds, double-size adds, pyramid down, and custom sequence
+- stop-out risk models: original stop, breakeven on total position, and ATR trailing stop
 - assumed losing trade R and expectancy target inputs
 - selected total move in ATR
 - user-defined comparison move series
@@ -169,6 +170,7 @@ Features:
 - average R per 1x unit for context
 - total position size/exposure
 - required win rate stats for break-even and target expectancies using total R as the average winner
+- stop-out R graphic with stop level, weighted entry, current move, and entry markers
 - entries and scale-ins counts
 - comparison bars across ATR moves
 - compact entry ladder showing each entry's contribution
@@ -182,6 +184,7 @@ gross weighted unit-R = sum(P&L per entry)
 total R = gross weighted unit-R
 additional scale-ins = total entries - 1, capped by maximum additional scale-ins
 required win rate = (target expectancy R + assumed loss R) / (average winner R + assumed loss R)
+stop-out R = sum(size multiplier × (stopLevelATR - entryATR) / stopDistanceATR)
 ```
 
 ## Supporting docs
