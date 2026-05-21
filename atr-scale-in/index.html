@@ -25,7 +25,7 @@
       </div>
       <div class="score-card">
         <span>Selected move result</span>
-        <strong id="selected-total-r">4.50R</strong>
+        <strong id="selected-total-r">45.00R</strong>
         <small id="selected-context">10 entries · 9 scale-ins</small>
       </div>
     </section>
@@ -91,8 +91,8 @@
 
       <section class="panel dashboard">
         <div class="stats">
-          <article><span id="stat-total-r">4.50R</span><small>normalised trade R</small></article>
-          <article><span id="stat-gross-r">45.00R</span><small>gross unit-R sum</small></article>
+          <article><span id="stat-total-r">45.00R</span><small>total R</small></article>
+          <article><span id="stat-average-r">4.50R</span><small>average R per 1x</small></article>
           <article><span id="stat-entries">10</span><small>total entries</small></article>
           <article><span id="stat-total-size">10x</span><small>total position size</small></article>
         </div>
@@ -100,7 +100,7 @@
         <div class="result-strip">
           <div>
             <p class="eyebrow">Readout</p>
-            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, 9 additional scale-ins, and equal size averages 4.50R across 10x total size. That is 10 entries: 1 initial + 9 scale-ins. The summed weighted unit-R is 45.00R before normalising.</strong>
+            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, 9 additional scale-ins, and equal size produces 45.00R total R when all weighted entries are added together. That is 10 entries: 1 initial + 9 scale-ins, with 10x total position size. Average R per 1x unit is 4.50R.</strong>
           </div>
         </div>
 
@@ -144,9 +144,9 @@
       <div class="panel-head">
         <div>
           <h2>Preset structure comparison</h2>
-          <p class="subtle">Same formula, different stop and scale spacing. Bars show normalised trade R so the comparison does not reward unlimited unit stacking by accident.</p>
+          <p class="subtle">Same formula, different stop and scale spacing. Bars show total R from adding the weighted entries together.</p>
         </div>
-        <span class="pill">normalised trade R</span>
+        <span class="pill">total R</span>
       </div>
       <div id="preset-comparison" class="preset-comparison"></div>
     </section>
@@ -155,7 +155,7 @@
       <h2>Assumptions</h2>
       <ol>
         <li><strong>Entry contribution:</strong> P&L per entry = size multiplier × max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
-        <li><strong>Headline result:</strong> normalised trade R = summed weighted entry R divided by total position size. The gross weighted unit-R sum is still shown separately for context.</li>
+        <li><strong>Headline result:</strong> total R = summed weighted entry R across all entries. Average R per 1x unit is shown separately for context.</li>
         <li><strong>Required win rate:</strong> target expectancy uses win rate × average winner R − loss rate × assumed loser R. Costs and execution mess are not included, because goblins insist on arriving later.</li>
         <li><strong>Size multipliers:</strong> 1x means the original unit size. Custom sequences repeat the last value if there are more entries than values.</li>
         <li><strong>Scale-in count:</strong> additional scale-ins exclude the initial entry at 0 ATR. Total entries = 1 initial entry + additional scale-ins.</li>

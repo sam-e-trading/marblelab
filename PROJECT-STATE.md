@@ -165,10 +165,10 @@ Features:
   - tight pyramid: 1 ATR stop, scale every 1 ATR
   - wider structure: 2 ATR stop, scale every 2 ATRs
   - slow builder: 3 ATR stop, scale every 3 ATRs
-- selected normalised trade R result
-- gross weighted unit-R sum for context
+- selected total R result
+- average R per 1x unit for context
 - total position size/exposure
-- required win rate stats for break-even and target expectancies
+- required win rate stats for break-even and target expectancies using total R as the average winner
 - entries and scale-ins counts
 - comparison bars across ATR moves
 - compact entry ladder showing each entry's contribution
@@ -179,7 +179,7 @@ Formula:
 ```text
 P&L per entry = size multiplier × max(totalMoveATR - entryATR, 0) / stopDistanceATR R
 gross weighted unit-R = sum(P&L per entry)
-normalised trade R = gross weighted unit-R / total position size
+total R = gross weighted unit-R
 additional scale-ins = total entries - 1, capped by maximum additional scale-ins
 required win rate = (target expectancy R + assumed loss R) / (average winner R + assumed loss R)
 ```

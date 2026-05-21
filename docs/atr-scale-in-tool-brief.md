@@ -23,7 +23,7 @@ Show the gross R impact of scaling into a trade at fixed ATR intervals. The v1 m
 entries = 0 ATR, then every scale-in distance up to and including total move, capped by maximum additional scale-ins
 P&L per entry = size multiplier * max(totalMoveATR - entryATR, 0) / stopDistanceATR R
 gross weighted unit-R = sum(P&L per entry)
-normalised trade R = gross weighted unit-R / total position size
+total R = gross weighted unit-R
 additional scale-ins = total entries - 1
 required win rate = (target expectancy R + assumed loss R) / (average winner R + assumed loss R)
 ```
@@ -36,6 +36,6 @@ required win rate = (target expectancy R + assumed loss R) / (average winner R +
 
 ## Assumptions
 
-One 1x unit stopped at the chosen ATR stop distance equals -1R. Size multipliers weight each entry; custom sequences repeat the final value if there are more entries than supplied values. The headline output is normalised by total position size so capped scale-in examples do not display the summed unit-R as if it were the whole-trade R multiple. Stop movement, breakeven logic, spread, slippage, partial exits, skipped fills, and position limits are outside v1.
+One 1x unit stopped at the chosen ATR stop distance equals -1R. Size multipliers weight each entry; custom sequences repeat the final value if there are more entries than supplied values. The headline output is the total weighted R from adding all entries together. Stop movement, breakeven logic, spread, slippage, partial exits, skipped fills, and position limits are outside v1.
 
 Public education only. Not financial advice.

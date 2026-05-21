@@ -200,13 +200,13 @@ function autoSeries() {
 }
 
 function renderStats(inputs, result) {
-  el('selected-total-r').textContent = formatR(result.normalisedR);
+  el('selected-total-r').textContent = formatR(result.grossUnitR);
   el('selected-context').textContent = `${result.entryCount} total entries · 1 initial + ${result.scaleIns} scale-ins`;
-  el('stat-total-r').textContent = formatR(result.normalisedR);
-  el('stat-gross-r').textContent = formatR(result.grossUnitR);
+  el('stat-total-r').textContent = formatR(result.grossUnitR);
+  el('stat-average-r').textContent = formatR(result.normalisedR);
   el('stat-entries').textContent = result.entryCount;
   el('stat-total-size').textContent = formatSize(result.totalSize);
-  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, ${inputs.maxScaleIns} additional scale-ins, and ${sizingLabel(inputs.sizingMode)} averages ${formatR(result.normalisedR)} across ${formatSize(result.totalSize)} total size. That is ${result.entryCount} entries: 1 initial + ${result.scaleIns} scale-ins. The summed weighted unit-R is ${formatR(result.grossUnitR)} before normalising.`;
+  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, ${inputs.maxScaleIns} additional scale-ins, and ${sizingLabel(inputs.sizingMode)} produces ${formatR(result.grossUnitR)} total R when all weighted entries are added together. That is ${result.entryCount} entries: 1 initial + ${result.scaleIns} scale-ins, with ${formatSize(result.totalSize)} total position size. Average R per 1x unit is ${formatR(result.normalisedR)}.`;
   el('comparison-note').textContent = `${formatAtr(inputs.stopDistance)} stop · every ${formatAtr(inputs.scaleDistance)} · max ${inputs.maxScaleIns} adds · ${sizingLabel(inputs.sizingMode)}`;
   el('ladder-note').textContent = `0 to ${formatAtr(inputs.totalMove)}`;
 }
@@ -216,21 +216,21 @@ function renderMoveBars(inputs) {
     move,
     result: calculateStructure(inputs.stopDistance, inputs.scaleDistance, move, inputs.maxScaleIns, inputs.sizingMode, inputs.sizeSequence)
   }));
-  const maxR = Math.max(...results.map(item => item.result.normalisedR), 1);
+  const maxR = Math.max(...results.map(item => item.result.grossUnitR), 1);
   el('move-bars').innerHTML = results.map(item => {
-    const width = (item.result.normalisedR / maxR) * 100;
+    const width = (item.result.grossUnitR / maxR) * 100;
     return `
       <div class="bar-row">
         <span>${formatAtr(item.move)}</span>
         <div class="bar-track"><div class="bar-fill" style="width: ${width}%"></div></div>
-        <span class="bar-value">${formatR(item.result.normalisedR)}</span>
+        <span class="bar-value">${formatR(item.result.grossUnitR)}</span>
       </div>
     `;
   }).join('');
 }
 
 function renderExpectancy(inputs, result) {
-  const winR = Math.max(result.normalisedR, 0);
+  const winR = Math.max(result.grossUnitR, 0);
   const lossR = inputs.assumedLossR;
   const breakEven = requiredWinRate(0, winR, lossR);
   el('expectancy-note').textContent = `Using ${formatR(winR)} average winner and ${formatR(lossR)} average loser.`;
@@ -273,18 +273,18 @@ function renderLadder(inputs, result) {
 function renderPresetComparison(inputs) {
   const moves = inputs.comparisonMoves;
   const allResults = Object.values(presets).flatMap(preset =>
-    moves.map(move => calculateStructure(preset.stopDistance, preset.scaleDistance, move, preset.maxScaleIns, preset.sizingMode, parseSizeSequence(preset.sizeSequence)).normalisedR)
+    moves.map(move => calculateStructure(preset.stopDistance, preset.scaleDistance, move, preset.maxScaleIns, preset.sizingMode, parseSizeSequence(preset.sizeSequence)).grossUnitR)
   );
   const maxR = Math.max(...allResults, 1);
   el('preset-comparison').innerHTML = Object.values(presets).map(preset => {
     const rows = moves.map(move => {
       const result = calculateStructure(preset.stopDistance, preset.scaleDistance, move, preset.maxScaleIns, preset.sizingMode, parseSizeSequence(preset.sizeSequence));
-      const width = (result.normalisedR / maxR) * 100;
+      const width = (result.grossUnitR / maxR) * 100;
       return `
         <div class="mini-row">
           <span>${formatAtr(move)}</span>
           <div class="mini-track"><div class="mini-fill" style="width: ${width}%"></div></div>
-          <span class="mini-value">${formatR(result.normalisedR)}</span>
+          <span class="mini-value">${formatR(result.grossUnitR)}</span>
         </div>
       `;
     }).join('');
