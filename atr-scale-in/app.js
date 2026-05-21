@@ -110,6 +110,16 @@ function sizingLabel(mode) {
   }[mode] || 'equal size';
 }
 
+function sizingHelp(mode) {
+  return {
+    equal: 'Equal size keeps every entry the same size as the first. Simple to model, but total exposure grows quickly.',
+    half: 'Half-size adds keep the first entry as the main position, then add smaller confirmation entries.',
+    double: 'Double-size adds are aggressive. Useful for stress-testing, but risk and concentration can get spicy fast.',
+    pyramidDown: 'Pyramid down reduces each later add, so the trade builds exposure without every add being full size.',
+    custom: 'Custom sequence uses your own multipliers. If you enter fewer values than entries, the final value repeats.'
+  }[mode] || 'Equal size keeps every entry the same size as the first.';
+}
+
 function requiredWinRate(targetExpectancy, averageWinR, averageLossR) {
   const denominator = averageWinR + averageLossR;
   if (denominator <= 0) return Infinity;
@@ -124,10 +134,21 @@ function expectancyAt(winRatePct, averageWinR, averageLossR) {
 function stopModelLabel(model) {
   return {
     original: 'original stop',
+    combinedOneR: 'combined 1R max-loss stop',
     breakeven: 'combined breakeven stop',
     trailing: 'ATR trailing stop',
     rPullback: 'R pullback from current move'
   }[model] || 'original stop';
+}
+
+function stopModelHelp(model) {
+  return {
+    original: 'Original stop keeps the first stop in place, so added entries increase total risk.',
+    combinedOneR: 'Combined 1R max-loss moves the stop after adds so all open entries together risk about -1R total.',
+    breakeven: 'Combined breakeven places the stop at the weighted average entry, aiming for about 0R if stopped.',
+    trailing: 'ATR trailing places the stop a fixed ATR distance behind the selected total move.',
+    rPullback: 'R pullback places the stop a chosen R distance back from the selected total move.'
+  }[model] || 'Original stop keeps the first stop in place, so added entries increase total risk.';
 }
 
 function entryLevels(totalMove, scaleDistance, maxScaleIns) {
@@ -171,6 +192,10 @@ function calculateStopOut(result, inputs) {
     ? result.entries.reduce((sum, entry) => sum + (entry.level * entry.size), 0) / result.totalSize
     : 0;
   let stopLevel = -inputs.stopDistance;
+  if (inputs.stopModel === 'combinedOneR') {
+    const entryValue = result.entries.reduce((sum, entry) => sum + (entry.level * entry.size), 0);
+    stopLevel = result.totalSize ? (entryValue - inputs.stopDistance) / result.totalSize : -inputs.stopDistance;
+  }
   if (inputs.stopModel === 'breakeven') stopLevel = weightedEntry;
   if (inputs.stopModel === 'trailing') stopLevel = inputs.totalMove - inputs.trailingStopDistance;
   if (inputs.stopModel === 'rPullback') stopLevel = inputs.totalMove - (inputs.stopOutAfterR * inputs.stopDistance);
@@ -232,6 +257,8 @@ function autoSeries() {
 }
 
 function renderStats(inputs, result) {
+  el('sizing-mode-help').textContent = sizingHelp(inputs.sizingMode);
+  el('stop-model-help').textContent = stopModelHelp(inputs.stopModel);
   el('selected-total-r').textContent = formatR(result.grossUnitR);
   el('selected-context').textContent = `${result.entryCount} total entries · 1 initial + ${result.scaleIns} scale-ins`;
   el('stat-total-r').textContent = formatR(result.grossUnitR);

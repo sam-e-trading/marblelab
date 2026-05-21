@@ -43,19 +43,19 @@
           <button class="preset" type="button" data-preset="slow">Slow builder</button>
         </div>
 
-        <label>Stop distance (ATR)
+        <label><span class="field-title">Stop distance (ATR) <span class="info-dot" tabindex="0" aria-label="Stop distance help">i<span class="tooltip">How far the initial stop sits from the first entry, measured in ATR. A 1 ATR stop means one full ATR of room. This defines the base 1R unit.</span></span></span>
           <input id="stop-distance" type="number" min="0.1" max="20" step="0.1" value="1" />
         </label>
 
-        <label>Scale-in every (ATR)
+        <label><span class="field-title">Scale-in every (ATR) <span class="info-dot" tabindex="0" aria-label="Scale-in spacing help">i<span class="tooltip">How far price must move in your favour before adding another entry. Smaller spacing adds faster; wider spacing waits for a cleaner move.</span></span></span>
           <input id="scale-distance" type="number" min="0.1" max="20" step="0.1" value="1" />
         </label>
 
-        <label>Maximum additional scale-ins
+        <label><span class="field-title">Maximum additional scale-ins <span class="info-dot" tabindex="0" aria-label="Maximum scale-ins help">i<span class="tooltip">The cap on extra entries after the first one. 2 means one initial entry plus up to 2 adds, for 3 entries total.</span></span></span>
           <input id="max-scale-ins" type="number" min="0" max="50" step="1" value="2" />
         </label>
 
-        <label>Scale-in sizing mode
+        <label><span class="field-title">Scale-in sizing mode <span class="info-dot" tabindex="0" aria-label="Scale-in sizing help">i<span class="tooltip">Controls how large each added position is compared with the original 1x entry. This can change both upside and stop-out risk quickly.</span></span></span>
           <select id="sizing-mode">
             <option value="equal" selected>Equal size — 1x, 1x, 1x</option>
             <option value="half">Half-size adds — 1x, 0.5x, 0.5x</option>
@@ -63,42 +63,45 @@
             <option value="pyramidDown">Pyramid down — 1x, 0.75x, 0.5x...</option>
             <option value="custom">Custom sequence</option>
           </select>
+          <span id="sizing-mode-help" class="field-help">Equal size keeps every entry the same size as the first.</span>
         </label>
 
-        <label>Custom size sequence
+        <label><span class="field-title">Custom size sequence <span class="info-dot" tabindex="0" aria-label="Custom size sequence help">i<span class="tooltip">Use comma-separated size multipliers for each entry. Example: 1, 0.5, 0.25 means full size first, half size second, quarter size third.</span></span></span>
           <textarea id="size-sequence" rows="2" placeholder="1, 0.5, 0.25">1, 1, 1</textarea>
         </label>
 
-        <label>Stop-out model
+        <label><span class="field-title">Stop-out model <span class="info-dot" tabindex="0" aria-label="Stop-out model help">i<span class="tooltip">Choose how the stop is managed after entries are added. This only affects the stop-out risk panel, not the selected move profit calculation.</span></span></span>
           <select id="stop-model">
             <option value="original" selected>Original stop</option>
+            <option value="combinedOneR">Combined 1R max-loss stop</option>
             <option value="breakeven">Combined breakeven stop</option>
             <option value="trailing">ATR trailing stop</option>
             <option value="rPullback">Stopped after X R pullback</option>
           </select>
+          <span id="stop-model-help" class="field-help">Original stop keeps the first stop in place, so added entries increase total risk.</span>
         </label>
 
-        <label>Trailing stop distance (ATR)
+        <label><span class="field-title">Trailing stop distance (ATR) <span class="info-dot" tabindex="0" aria-label="Trailing stop help">i<span class="tooltip">Used only for the ATR trailing stop model. The stop sits this many ATR behind the selected total move.</span></span></span>
           <input id="trailing-stop-distance" type="number" min="0.1" max="50" step="0.1" value="1" />
         </label>
 
-        <label>Stopped after pullback (R)
+        <label><span class="field-title">Stopped after pullback (R) <span class="info-dot" tabindex="0" aria-label="R pullback help">i<span class="tooltip">Used only for the X R pullback model. It places the stop a chosen R distance back from the selected move.</span></span></span>
           <input id="stop-out-after-r" type="number" min="0.1" max="100" step="0.1" value="1" />
         </label>
 
-        <label>Assumed losing trade (R)
+        <label><span class="field-title">Assumed losing trade (R) <span class="info-dot" tabindex="0" aria-label="Assumed loss help">i<span class="tooltip">Used in the required win-rate section. If your normal loser is -1R, leave this as 1. If stops are tighter or partial losses are common, adjust it.</span></span></span>
           <input id="assumed-loss-r" type="number" min="0.01" max="20" step="0.1" value="1" />
         </label>
 
-        <label>Expectancy targets (R)
+        <label><span class="field-title">Expectancy targets (R) <span class="info-dot" tabindex="0" aria-label="Expectancy targets help">i<span class="tooltip">The average R per trade you want to test. The table shows the win rate needed to reach each target using the selected average winner and loser.</span></span></span>
           <textarea id="expectancy-targets" rows="2" placeholder="0, 0.25, 0.5, 1">0, 0.25, 0.5, 1</textarea>
         </label>
 
-        <label>Selected total move (ATR)
+        <label><span class="field-title">Selected total move (ATR) <span class="info-dot" tabindex="0" aria-label="Selected move help">i<span class="tooltip">The move you want to inspect in detail. Entries are added up to this point, then the dashboard calculates the combined R result.</span></span></span>
           <input id="total-move" type="number" min="0" max="100" step="0.1" value="9" />
         </label>
 
-        <label>Comparison moves
+        <label><span class="field-title">Comparison moves <span class="info-dot" tabindex="0" aria-label="Comparison moves help">i<span class="tooltip">A comma-separated list of move sizes to compare in the bar charts. Use this to see how the same structure behaves across small, medium, and large moves.</span></span></span>
           <textarea id="comparison-moves" rows="3" placeholder="3, 5, 7, 9">3, 5, 7, 9</textarea>
         </label>
 
@@ -165,6 +168,7 @@
         <h3>What the stop models mean</h3>
         <ul>
           <li><strong>Original stop:</strong> the stop stays behind the first entry. Every extra scale-in adds more exposure, so the loss can grow quickly.</li>
+          <li><strong>Combined 1R max-loss stop:</strong> the stop is moved after adds so every open entry together can lose no more than -1R. If 1R is $100, the combined stopped loss stays capped at about $100.</li>
           <li><strong>Combined breakeven stop:</strong> the stop is placed at the weighted average entry price, so all open entries together would be about 0R if stopped.</li>
           <li><strong>ATR trailing stop:</strong> the stop sits a fixed ATR distance behind the selected total move. Example: 9 ATR move with a 1 ATR trail means stop at 8 ATR.</li>
           <li><strong>Stopped after X R pullback:</strong> the stop is set X R back from the selected move, converted into ATR using the stop distance.</li>
@@ -200,10 +204,10 @@
         <li><strong>Entry contribution:</strong> P&L per entry = size multiplier × max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
         <li><strong>Headline result:</strong> total R = summed weighted entry R across all entries. Average R per 1x unit is shown separately for context.</li>
         <li><strong>Required win rate:</strong> target expectancy uses win rate × average winner R − loss rate × assumed loser R. Costs and execution mess are not included, because goblins insist on arriving later.</li>
-        <li><strong>Stop-out risk:</strong> original stop keeps the first stop level, combined breakeven uses the weighted average entry so all entries together are around 0R if stopped, ATR trailing places the stop the chosen ATR distance behind the selected move, and X R pullback converts R into ATR using the stop distance.</li>
+        <li><strong>Stop-out risk:</strong> original stop keeps the first stop level, combined 1R max-loss moves the stop so all open entries together are capped at about -1R, combined breakeven uses the weighted average entry so all entries together are around 0R if stopped, ATR trailing places the stop the chosen ATR distance behind the selected move, and X R pullback converts R into ATR using the stop distance.</li>
         <li><strong>Size multipliers:</strong> 1x means the original unit size. Custom sequences repeat the last value if there are more entries than values.</li>
         <li><strong>Scale-in count:</strong> additional scale-ins exclude the initial entry at 0 ATR. Total entries = 1 initial entry + additional scale-ins.</li>
-        <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>
+        <li><strong>Not a full trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. This shows the simplified stop level needed for the selected open entries.</li>
       </ol>
     </section>
 

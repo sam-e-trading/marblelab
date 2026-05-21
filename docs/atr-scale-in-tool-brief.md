@@ -12,7 +12,7 @@ Show the gross R impact of scaling into a trade at fixed ATR intervals. The v1 m
 - Scale-in every (ATR)
 - Maximum additional scale-ins
 - Scale-in sizing mode: equal, half-size adds, double-size adds, pyramid down, or custom sequence
-- Stop-out model: original stop, combined breakeven stop, ATR trailing stop, or stopped after X R pullback
+- Stop-out model: original stop, combined 1R max-loss stop, combined breakeven stop, ATR trailing stop, or stopped after X R pullback
 - Assumed losing trade in R
 - Expectancy targets in R
 - Selected total move (ATR)
@@ -28,6 +28,10 @@ total R = gross weighted unit-R
 additional scale-ins = total entries - 1
 required win rate = (target expectancy R + assumed loss R) / (average winner R + assumed loss R)
 stop-out R = sum(size multiplier * (stopLevelATR - entryATR) / stopDistanceATR)
+
+Combined 1R max-loss stop solves the stop level so the summed open-position loss is capped at -1R:
+
+stopLevelATR = (sum(entryATR * size multiplier) - stopDistanceATR) / totalSize
 ```
 
 ## Included Presets
@@ -38,6 +42,6 @@ stop-out R = sum(size multiplier * (stopLevelATR - entryATR) / stopDistanceATR)
 
 ## Assumptions
 
-One 1x unit stopped at the chosen ATR stop distance equals -1R. Size multipliers weight each entry; custom sequences repeat the final value if there are more entries than supplied values. The headline output is the total weighted R from adding all entries together. Stop movement, breakeven logic, spread, slippage, partial exits, skipped fills, and position limits are outside v1.
+One 1x unit stopped at the chosen ATR stop distance equals -1R. Size multipliers weight each entry; custom sequences repeat the final value if there are more entries than supplied values. The headline output is the total weighted R from adding all entries together. The combined 1R max-loss stop moves the stop after adds so the total open-position risk remains about -1R. Spread, slippage, partial exits, skipped fills, and position limits are outside v1.
 
 Public education only. Not financial advice.
