@@ -72,10 +72,12 @@ function calculateStructure(stopDistance, scaleDistance, totalMove, maxScaleIns)
     level,
     pnlR: Math.max(totalMove - level, 0) / stopDistance
   }));
-  const totalR = entries.reduce((sum, entry) => sum + entry.pnlR, 0);
+  const grossUnitR = entries.reduce((sum, entry) => sum + entry.pnlR, 0);
+  const normalisedR = entries.length ? grossUnitR / entries.length : 0;
   return {
     entries,
-    totalR,
+    grossUnitR,
+    normalisedR,
     entryCount: entries.length,
     scaleIns: Math.max(0, entries.length - 1),
     lastEntry: entries.length ? entries[entries.length - 1].level : 0
@@ -119,13 +121,13 @@ function autoSeries() {
 }
 
 function renderStats(inputs, result) {
-  el('selected-total-r').textContent = formatR(result.totalR);
+  el('selected-total-r').textContent = formatR(result.normalisedR);
   el('selected-context').textContent = `${result.entryCount} entries · ${result.scaleIns} scale-ins`;
-  el('stat-total-r').textContent = formatR(result.totalR);
+  el('stat-total-r').textContent = formatR(result.normalisedR);
+  el('stat-gross-r').textContent = formatR(result.grossUnitR);
   el('stat-entries').textContent = result.entryCount;
   el('stat-scale-ins').textContent = result.scaleIns;
-  el('stat-last-entry').textContent = formatAtr(result.lastEntry);
-  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, and a ${inputs.maxScaleIns} scale-in cap creates ${formatR(result.totalR)} gross across ${result.entryCount} equal entries.`;
+  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, and a ${inputs.maxScaleIns} scale-in cap averages ${formatR(result.normalisedR)} across ${result.entryCount} equal entries. The summed gross unit-R is ${formatR(result.grossUnitR)} before normalising.`;
   el('comparison-note').textContent = `${formatAtr(inputs.stopDistance)} stop · every ${formatAtr(inputs.scaleDistance)} · max ${inputs.maxScaleIns} scale-ins`;
   el('ladder-note').textContent = `0 to ${formatAtr(inputs.totalMove)}`;
 }
@@ -135,14 +137,14 @@ function renderMoveBars(inputs) {
     move,
     result: calculateStructure(inputs.stopDistance, inputs.scaleDistance, move, inputs.maxScaleIns)
   }));
-  const maxR = Math.max(...results.map(item => item.result.totalR), 1);
+  const maxR = Math.max(...results.map(item => item.result.normalisedR), 1);
   el('move-bars').innerHTML = results.map(item => {
-    const width = (item.result.totalR / maxR) * 100;
+    const width = (item.result.normalisedR / maxR) * 100;
     return `
       <div class="bar-row">
         <span>${formatAtr(item.move)}</span>
         <div class="bar-track"><div class="bar-fill" style="width: ${width}%"></div></div>
-        <span class="bar-value">${formatR(item.result.totalR)}</span>
+        <span class="bar-value">${formatR(item.result.normalisedR)}</span>
       </div>
     `;
   }).join('');
@@ -171,18 +173,18 @@ function renderLadder(inputs, result) {
 function renderPresetComparison(inputs) {
   const moves = inputs.comparisonMoves;
   const allResults = Object.values(presets).flatMap(preset =>
-    moves.map(move => calculateStructure(preset.stopDistance, preset.scaleDistance, move, preset.maxScaleIns).totalR)
+    moves.map(move => calculateStructure(preset.stopDistance, preset.scaleDistance, move, preset.maxScaleIns).normalisedR)
   );
   const maxR = Math.max(...allResults, 1);
   el('preset-comparison').innerHTML = Object.values(presets).map(preset => {
     const rows = moves.map(move => {
       const result = calculateStructure(preset.stopDistance, preset.scaleDistance, move, preset.maxScaleIns);
-      const width = (result.totalR / maxR) * 100;
+      const width = (result.normalisedR / maxR) * 100;
       return `
         <div class="mini-row">
           <span>${formatAtr(move)}</span>
           <div class="mini-track"><div class="mini-fill" style="width: ${width}%"></div></div>
-          <span class="mini-value">${formatR(result.totalR)}</span>
+          <span class="mini-value">${formatR(result.normalisedR)}</span>
         </div>
       `;
     }).join('');

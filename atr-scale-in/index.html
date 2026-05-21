@@ -25,7 +25,7 @@
       </div>
       <div class="score-card">
         <span>Selected move result</span>
-        <strong id="selected-total-r">45.00R</strong>
+        <strong id="selected-total-r">4.50R</strong>
         <small id="selected-context">10 entries · 9 scale-ins</small>
       </div>
     </section>
@@ -69,16 +69,16 @@
 
       <section class="panel dashboard">
         <div class="stats">
-          <article><span id="stat-total-r">45.00R</span><small>final P&L in R</small></article>
+          <article><span id="stat-total-r">4.50R</span><small>normalised trade R</small></article>
+          <article><span id="stat-gross-r">45.00R</span><small>gross unit-R sum</small></article>
           <article><span id="stat-entries">10</span><small>total entries</small></article>
           <article><span id="stat-scale-ins">9</span><small>scale-ins</small></article>
-          <article><span id="stat-last-entry">9 ATR</span><small>last entry level</small></article>
         </div>
 
         <div class="result-strip">
           <div>
             <p class="eyebrow">Readout</p>
-            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, and a 9 scale-in cap creates 45.00R gross across 10 equal entries.</strong>
+            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, and a 9 scale-in cap averages 4.50R across 10 equal entries. The summed gross unit-R is 45.00R before normalising.</strong>
           </div>
         </div>
 
@@ -107,9 +107,9 @@
       <div class="panel-head">
         <div>
           <h2>Preset structure comparison</h2>
-          <p class="subtle">Same gross formula, different stop and scale spacing. This is where the tight structure starts shouting.</p>
+          <p class="subtle">Same formula, different stop and scale spacing. Bars show normalised trade R so the comparison does not reward unlimited unit stacking by accident.</p>
         </div>
-        <span class="pill">gross R before real-world mess</span>
+        <span class="pill">normalised trade R</span>
       </div>
       <div id="preset-comparison" class="preset-comparison"></div>
     </section>
@@ -117,7 +117,8 @@
     <section class="panel explainer">
       <h2>Assumptions</h2>
       <ol>
-        <li><strong>Gross scaling model:</strong> P&L per entry = max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
+        <li><strong>Entry contribution:</strong> P&L per entry = max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
+        <li><strong>Headline result:</strong> normalised trade R = summed entry R divided by total entries. The gross unit-R sum is still shown separately for context.</li>
         <li><strong>Equal unit size:</strong> every entry uses the same initial unit size. One unit stopped at the chosen stop distance equals -1R.</li>
         <li><strong>Scale-in count:</strong> scale-ins exclude the initial entry at 0 ATR and stop once the maximum scale-in cap is reached.</li>
         <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>

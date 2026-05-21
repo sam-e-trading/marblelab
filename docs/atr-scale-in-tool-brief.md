@@ -19,7 +19,8 @@ Show the gross R impact of scaling into a trade at fixed ATR intervals. The v1 m
 ```text
 entries = 0 ATR, then every scale-in distance up to and including total move, capped by maximum scale-ins
 P&L per entry = max(totalMoveATR - entryATR, 0) / stopDistanceATR R
-total R = sum(P&L per entry)
+gross unit-R = sum(P&L per entry)
+normalised trade R = gross unit-R / total entries
 scale-ins = entries - 1
 ```
 
@@ -31,6 +32,6 @@ scale-ins = entries - 1
 
 ## Assumptions
 
-Each entry uses the same initial unit size. One unit stopped at the chosen ATR stop distance equals -1R. Outputs show gross scaling impact only; stop movement, breakeven logic, spread, slippage, partial exits, skipped fills, and position limits are outside v1.
+Each entry uses the same initial unit size. One unit stopped at the chosen ATR stop distance equals -1R. The headline output is normalised across entries so capped scale-in examples do not display the summed unit-R as if it were the whole-trade R multiple. Stop movement, breakeven logic, spread, slippage, partial exits, skipped fills, and position limits are outside v1.
 
 Public education only. Not financial advice.

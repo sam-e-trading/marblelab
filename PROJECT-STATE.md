@@ -163,7 +163,8 @@ Features:
   - tight pyramid: 1 ATR stop, scale every 1 ATR
   - wider structure: 2 ATR stop, scale every 2 ATRs
   - slow builder: 3 ATR stop, scale every 3 ATRs
-- selected final R result
+- selected normalised trade R result
+- gross unit-R sum for context
 - entries and scale-ins counts
 - comparison bars across ATR moves
 - compact entry ladder showing each entry's contribution
@@ -173,7 +174,8 @@ Formula:
 
 ```text
 P&L per entry = max(totalMoveATR - entryATR, 0) / stopDistanceATR R
-total R = sum(P&L per entry)
+gross unit-R = sum(P&L per entry)
+normalised trade R = gross unit-R / total entries
 scale-ins = entries - 1, capped by maximum scale-ins
 ```
 
