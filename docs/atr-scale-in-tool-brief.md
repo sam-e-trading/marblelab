@@ -12,7 +12,7 @@ Show the gross R impact of scaling into a trade at fixed ATR intervals. The v1 m
 - Scale-in every (ATR)
 - Maximum additional scale-ins
 - Scale-in sizing mode: equal, half-size adds, double-size adds, pyramid down, or custom sequence
-- Stop-out model: original stop, breakeven on total position, or ATR trailing stop
+- Stop-out model: original stop, breakeven on total position, ATR trailing stop, or stopped after X R pullback
 - Assumed losing trade in R
 - Expectancy targets in R
 - Selected total move (ATR)

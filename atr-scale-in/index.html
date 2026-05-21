@@ -74,11 +74,16 @@
             <option value="original" selected>Original stop</option>
             <option value="breakeven">Breakeven on total position</option>
             <option value="trailing">ATR trailing stop</option>
+            <option value="rPullback">Stopped after X R pullback</option>
           </select>
         </label>
 
         <label>Trailing stop distance (ATR)
           <input id="trailing-stop-distance" type="number" min="0.1" max="50" step="0.1" value="1" />
+        </label>
+
+        <label>Stopped after pullback (R)
+          <input id="stop-out-after-r" type="number" min="0.1" max="100" step="0.1" value="1" />
         </label>
 
         <label>Assumed losing trade (R)
@@ -186,7 +191,7 @@
         <li><strong>Entry contribution:</strong> P&L per entry = size multiplier × max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
         <li><strong>Headline result:</strong> total R = summed weighted entry R across all entries. Average R per 1x unit is shown separately for context.</li>
         <li><strong>Required win rate:</strong> target expectancy uses win rate × average winner R − loss rate × assumed loser R. Costs and execution mess are not included, because goblins insist on arriving later.</li>
-        <li><strong>Stop-out risk:</strong> original stop keeps the first stop level, breakeven uses the weighted average entry, and ATR trailing places the stop the chosen ATR distance behind the selected move.</li>
+        <li><strong>Stop-out risk:</strong> original stop keeps the first stop level, breakeven uses the weighted average entry, ATR trailing places the stop the chosen ATR distance behind the selected move, and X R pullback converts R into ATR using the stop distance.</li>
         <li><strong>Size multipliers:</strong> 1x means the original unit size. Custom sequences repeat the last value if there are more entries than values.</li>
         <li><strong>Scale-in count:</strong> additional scale-ins exclude the initial entry at 0 ATR. Total entries = 1 initial entry + additional scale-ins.</li>
         <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>

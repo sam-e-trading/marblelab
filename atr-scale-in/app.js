@@ -125,7 +125,8 @@ function stopModelLabel(model) {
   return {
     original: 'original stop',
     breakeven: 'breakeven on total position',
-    trailing: 'ATR trailing stop'
+    trailing: 'ATR trailing stop',
+    rPullback: 'R pullback from current move'
   }[model] || 'original stop';
 }
 
@@ -172,6 +173,7 @@ function calculateStopOut(result, inputs) {
   let stopLevel = -inputs.stopDistance;
   if (inputs.stopModel === 'breakeven') stopLevel = weightedEntry;
   if (inputs.stopModel === 'trailing') stopLevel = inputs.totalMove - inputs.trailingStopDistance;
+  if (inputs.stopModel === 'rPullback') stopLevel = inputs.totalMove - (inputs.stopOutAfterR * inputs.stopDistance);
   stopLevel = Math.min(stopLevel, inputs.totalMove);
   const stopOutR = result.entries.reduce((sum, entry) => {
     return sum + (((stopLevel - entry.level) / inputs.stopDistance) * entry.size);
@@ -193,10 +195,11 @@ function currentInputs() {
   const sizeSequence = parseSizeSequence(el('size-sequence').value);
   const stopModel = el('stop-model').value;
   const trailingStopDistance = clamp(el('trailing-stop-distance').value, 0.1, 50, stopDistance);
+  const stopOutAfterR = clamp(el('stop-out-after-r').value, 0.1, 100, 1);
   const assumedLossR = clamp(el('assumed-loss-r').value, 0.01, 20, 1);
   const expectancyTargets = parseTargetSeries(el('expectancy-targets').value, [0, 0.25, 0.5, 1]);
   const comparisonMoves = parseMoveSeries(el('comparison-moves').value, [3, 5, 7, 9]);
-  return { stopDistance, scaleDistance, maxScaleIns, totalMove, sizingMode, sizeSequence, stopModel, trailingStopDistance, assumedLossR, expectancyTargets, comparisonMoves };
+  return { stopDistance, scaleDistance, maxScaleIns, totalMove, sizingMode, sizeSequence, stopModel, trailingStopDistance, stopOutAfterR, assumedLossR, expectancyTargets, comparisonMoves };
 }
 
 function applyPreset(key) {
@@ -369,7 +372,7 @@ function render() {
   renderPresetComparison(inputs);
 }
 
-['stop-distance', 'scale-distance', 'max-scale-ins', 'total-move', 'sizing-mode', 'size-sequence', 'stop-model', 'trailing-stop-distance', 'assumed-loss-r', 'expectancy-targets', 'comparison-moves'].forEach(id => {
+['stop-distance', 'scale-distance', 'max-scale-ins', 'total-move', 'sizing-mode', 'size-sequence', 'stop-model', 'trailing-stop-distance', 'stop-out-after-r', 'assumed-loss-r', 'expectancy-targets', 'comparison-moves'].forEach(id => {
   el(id).addEventListener('input', () => {
     document.querySelectorAll('.preset').forEach(button => button.classList.remove('active'));
     render();
