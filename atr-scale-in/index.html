@@ -21,12 +21,12 @@
       <div>
         <p class="eyebrow">Scale-in maths</p>
         <h1>ATR Scale-In R Multiple Calculator</h1>
-        <p class="lede">See how adding equal units every few ATRs changes gross R when a trade keeps moving. Simple model, clear assumptions, no stop-path theatre.</p>
+        <p class="lede">Test how ATR stop distance, scale-in spacing, position size, and total move affect the total R result of a trade.</p>
       </div>
       <div class="score-card">
         <span>Selected move result</span>
-        <strong id="selected-total-r">45.00R</strong>
-        <small id="selected-context">10 entries · 9 scale-ins</small>
+        <strong id="selected-total-r">24.00R</strong>
+        <small id="selected-context">3 total entries · 1 initial + 2 scale-ins</small>
       </div>
     </section>
 
@@ -52,7 +52,7 @@
         </label>
 
         <label>Maximum additional scale-ins
-          <input id="max-scale-ins" type="number" min="0" max="50" step="1" value="9" />
+          <input id="max-scale-ins" type="number" min="0" max="50" step="1" value="2" />
         </label>
 
         <label>Scale-in sizing mode
@@ -91,16 +91,16 @@
 
       <section class="panel dashboard">
         <div class="stats">
-          <article><span id="stat-total-r">45.00R</span><small>total R</small></article>
-          <article><span id="stat-average-r">4.50R</span><small>average R per 1x</small></article>
-          <article><span id="stat-entries">10</span><small>total entries</small></article>
-          <article><span id="stat-total-size">10x</span><small>total position size</small></article>
+          <article><span id="stat-total-r">24.00R</span><small>total R</small></article>
+          <article><span id="stat-average-r">8.00R</span><small>average R per 1x</small></article>
+          <article><span id="stat-entries">3</span><small>total entries</small></article>
+          <article><span id="stat-total-size">3x</span><small>total position size</small></article>
         </div>
 
         <div class="result-strip">
           <div>
             <p class="eyebrow">Readout</p>
-            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, 9 additional scale-ins, and equal size produces 45.00R total R when all weighted entries are added together. That is 10 entries: 1 initial + 9 scale-ins, with 10x total position size. Average R per 1x unit is 4.50R.</strong>
+            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, 2 additional scale-ins, and equal size produces 24.00R total R from all entries combined. That is 3 entries: 1 initial + 2 scale-ins, with 3x total position size. Average R per 1x unit is 8.00R.</strong>
           </div>
         </div>
 

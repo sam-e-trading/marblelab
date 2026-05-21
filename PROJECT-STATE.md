@@ -162,7 +162,7 @@ Features:
 - user-defined comparison move series
 - auto-generated simple comparison series
 - presets:
-  - tight pyramid: 1 ATR stop, scale every 1 ATR
+  - tight pyramid: 1 ATR stop, scale every 1 ATR, max 2 additional scale-ins
   - wider structure: 2 ATR stop, scale every 2 ATRs
   - slow builder: 3 ATR stop, scale every 3 ATRs
 - selected total R result

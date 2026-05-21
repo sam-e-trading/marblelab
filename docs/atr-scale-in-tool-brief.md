@@ -30,7 +30,7 @@ required win rate = (target expectancy R + assumed loss R) / (average winner R +
 
 ## Included Presets
 
-- Tight pyramid: 1 ATR stop, scale every 1 ATR, moves 3, 5, 7, 9
+- Tight pyramid: 1 ATR stop, scale every 1 ATR, maximum 2 additional scale-ins, moves 3, 5, 7, 9
 - Wider structure: 2 ATR stop, scale every 2 ATRs, moves 3, 5, 7, 9
 - Slow builder: 3 ATR stop, scale every 3 ATRs, moves 3, 6, 9, 12
 

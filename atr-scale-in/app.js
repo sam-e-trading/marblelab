@@ -5,7 +5,7 @@ const presets = {
     name: 'Tight pyramid',
     stopDistance: 1,
     scaleDistance: 1,
-    maxScaleIns: 9,
+    maxScaleIns: 2,
     sizingMode: 'equal',
     sizeSequence: '1, 1, 1',
     totalMove: 9,
@@ -206,7 +206,7 @@ function renderStats(inputs, result) {
   el('stat-average-r').textContent = formatR(result.normalisedR);
   el('stat-entries').textContent = result.entryCount;
   el('stat-total-size').textContent = formatSize(result.totalSize);
-  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, ${inputs.maxScaleIns} additional scale-ins, and ${sizingLabel(inputs.sizingMode)} produces ${formatR(result.grossUnitR)} total R when all weighted entries are added together. That is ${result.entryCount} entries: 1 initial + ${result.scaleIns} scale-ins, with ${formatSize(result.totalSize)} total position size. Average R per 1x unit is ${formatR(result.normalisedR)}.`;
+  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, ${inputs.maxScaleIns} additional scale-ins, and ${sizingLabel(inputs.sizingMode)} produces ${formatR(result.grossUnitR)} total R from all entries combined. That is ${result.entryCount} entries: 1 initial + ${result.scaleIns} scale-ins, with ${formatSize(result.totalSize)} total position size. Average R per 1x unit is ${formatR(result.normalisedR)}.`;
   el('comparison-note').textContent = `${formatAtr(inputs.stopDistance)} stop · every ${formatAtr(inputs.scaleDistance)} · max ${inputs.maxScaleIns} adds · ${sizingLabel(inputs.sizingMode)}`;
   el('ladder-note').textContent = `0 to ${formatAtr(inputs.totalMove)}`;
 }
