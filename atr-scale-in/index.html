@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ATR Scale-In R Multiple Calculator — Marble Lab</title>
+  <meta name="description" content="A simple visual calculator for comparing ATR scale-in structures and their gross P&L in R multiples." />
+  <meta property="og:title" content="ATR Scale-In R Multiple Calculator" />
+  <meta property="og:description" content="Test stop distance, scale-in distance, and ATR move size to see gross scaling impact in R multiples." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a href="../">← Marble Lab</a>
+      <span>Educational only · Not financial advice</span>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Scale-in maths</p>
+        <h1>ATR Scale-In R Multiple Calculator</h1>
+        <p class="lede">See how adding equal units every few ATRs changes gross R when a trade keeps moving. Simple model, clear assumptions, no stop-path theatre.</p>
+      </div>
+      <div class="score-card">
+        <span>Selected move result</span>
+        <strong id="selected-total-r">45.00R</strong>
+        <small id="selected-context">10 entries · 9 scale-ins</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="panel-head">
+          <h2>Inputs</h2>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+
+        <div class="preset-grid" aria-label="Presets">
+          <button class="preset active" type="button" data-preset="tight">Tight pyramid</button>
+          <button class="preset" type="button" data-preset="wide">Wider structure</button>
+          <button class="preset" type="button" data-preset="slow">Slow builder</button>
+        </div>
+
+        <label>Stop distance (ATR)
+          <input id="stop-distance" type="number" min="0.1" max="20" step="0.1" value="1" />
+        </label>
+
+        <label>Scale-in every (ATR)
+          <input id="scale-distance" type="number" min="0.1" max="20" step="0.1" value="1" />
+        </label>
+
+        <label>Selected total move (ATR)
+          <input id="total-move" type="number" min="0" max="100" step="0.1" value="9" />
+        </label>
+
+        <label>Comparison moves
+          <textarea id="comparison-moves" rows="3" placeholder="3, 5, 7, 9">3, 5, 7, 9</textarea>
+        </label>
+
+        <button id="auto-series" type="button">Auto-generate simple series</button>
+        <p class="note">Model: first entry at 0 ATR, then add one equal unit every scale-in distance up to the selected move. Each unit uses the same initial size; 1R is based on one unit's stop distance.</p>
+      </aside>
+
+      <section class="panel dashboard">
+        <div class="stats">
+          <article><span id="stat-total-r">45.00R</span><small>final P&L in R</small></article>
+          <article><span id="stat-entries">10</span><small>total entries</small></article>
+          <article><span id="stat-scale-ins">9</span><small>scale-ins</small></article>
+          <article><span id="stat-last-entry">9 ATR</span><small>last entry level</small></article>
+        </div>
+
+        <div class="result-strip">
+          <div>
+            <p class="eyebrow">Readout</p>
+            <strong id="readout">A 9 ATR move with a 1 ATR stop and 1 ATR scale spacing creates 45.00R gross across 10 equal entries.</strong>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="panel-head compact">
+            <h2>Comparison moves</h2>
+            <span id="comparison-note" class="pill">selected structure</span>
+          </div>
+          <div id="move-bars" class="bar-chart" aria-label="R multiple comparison by ATR move"></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel ladder-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Entry ladder</h2>
+          <p class="subtle">Compact view of where equal-sized entries are added and how much each contributes at the selected move.</p>
+        </div>
+        <span id="ladder-note" class="pill">0 to 9 ATR</span>
+      </div>
+      <div id="entry-ladder" class="entry-ladder"></div>
+    </section>
+
+    <section class="panel comparison-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Preset structure comparison</h2>
+          <p class="subtle">Same gross formula, different stop and scale spacing. This is where the tight structure starts shouting.</p>
+        </div>
+        <span class="pill">gross R before real-world mess</span>
+      </div>
+      <div id="preset-comparison" class="preset-comparison"></div>
+    </section>
+
+    <section class="panel explainer">
+      <h2>Assumptions</h2>
+      <ol>
+        <li><strong>Gross scaling model:</strong> P&L per entry = max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
+        <li><strong>Equal unit size:</strong> every entry uses the same initial unit size. One unit stopped at the chosen stop distance equals -1R.</li>
+        <li><strong>Scale-in count:</strong> scale-ins exclude the initial entry at 0 ATR.</li>
+        <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span>Marble Lab · ATR Scale-In R Multiple Calculator</span>
+      <span>Runs locally in your browser · Public education only</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

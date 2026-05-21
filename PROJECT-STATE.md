@@ -1,6 +1,6 @@
 # Marble Lab — Project State
 
-Last updated: 2026-05-14
+Last updated: 2026-05-21
 
 ## What this is
 
@@ -147,6 +147,35 @@ expectancy R = (win rate * average win R) - (loss rate * average loss R)
 break-even win rate = average loss R / (average win R + average loss R)
 ```
 
+### `/atr-scale-in/` — ATR Scale-In R Multiple Calculator
+
+Visual gross-R calculator for fixed ATR scale-in structures.
+
+Features:
+
+- stop distance in ATR
+- scale-in distance in ATR
+- selected total move in ATR
+- user-defined comparison move series
+- auto-generated simple comparison series
+- presets:
+  - tight pyramid: 1 ATR stop, scale every 1 ATR
+  - wider structure: 2 ATR stop, scale every 2 ATRs
+  - slow builder: 3 ATR stop, scale every 3 ATRs
+- selected final R result
+- entries and scale-ins counts
+- comparison bars across ATR moves
+- compact entry ladder showing each entry's contribution
+- preset structure comparison
+
+Formula:
+
+```text
+P&L per entry = max(totalMoveATR - entryATR, 0) / stopDistanceATR R
+total R = sum(P&L per entry)
+scale-ins = entries - 1
+```
+
 ## Supporting docs
 
 Briefs live in `marblelab/docs/`, including:
@@ -155,6 +184,7 @@ Briefs live in `marblelab/docs/`, including:
 - `compounding-returns-monthly-path-v2-brief.md`
 - `drawdown-recovery-tool-brief.md`
 - `edge-simulator-brief.md`
+- `atr-scale-in-tool-brief.md`
 
 ## Brand / wording guidance
 
@@ -198,6 +228,7 @@ node --check position-sizing-calculator/app.js
 node --check compounding-returns/app.js
 node --check drawdown-recovery/app.js
 node --check edge-simulator/app.js
+node --check atr-scale-in/app.js
 python3 -m http.server 8770
 ```
 
@@ -209,3 +240,4 @@ Local URLs:
 - http://127.0.0.1:8770/compounding-returns/
 - http://127.0.0.1:8770/drawdown-recovery/
 - http://127.0.0.1:8770/edge-simulator/
+- http://127.0.0.1:8770/atr-scale-in/
