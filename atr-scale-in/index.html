@@ -69,6 +69,14 @@
           <textarea id="size-sequence" rows="2" placeholder="1, 0.5, 0.25">1, 1, 1</textarea>
         </label>
 
+        <label>Assumed losing trade (R)
+          <input id="assumed-loss-r" type="number" min="0.01" max="20" step="0.1" value="1" />
+        </label>
+
+        <label>Expectancy targets (R)
+          <textarea id="expectancy-targets" rows="2" placeholder="0, 0.25, 0.5, 1">0, 0.25, 0.5, 1</textarea>
+        </label>
+
         <label>Selected total move (ATR)
           <input id="total-move" type="number" min="0" max="100" step="0.1" value="9" />
         </label>
@@ -106,6 +114,21 @@
       </section>
     </section>
 
+    <section class="panel expectancy-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Required win rate</h2>
+          <p id="expectancy-note" class="subtle">Using 4.50R average winner and 1.00R average loser.</p>
+        </div>
+        <span class="pill">expectancy maths</span>
+      </div>
+      <div class="expectancy-summary">
+        <article><span id="breakeven-win-rate">18.2%</span><small>break-even win rate</small></article>
+        <article><span id="expectancy-at-50">1.75R</span><small>expectancy at 50% wins</small></article>
+      </div>
+      <div id="expectancy-table" class="expectancy-table" aria-label="Required win rate by expectancy target"></div>
+    </section>
+
     <section class="panel ladder-panel">
       <div class="panel-head">
         <div>
@@ -133,6 +156,7 @@
       <ol>
         <li><strong>Entry contribution:</strong> P&L per entry = size multiplier × max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
         <li><strong>Headline result:</strong> normalised trade R = summed weighted entry R divided by total position size. The gross weighted unit-R sum is still shown separately for context.</li>
+        <li><strong>Required win rate:</strong> target expectancy uses win rate × average winner R − loss rate × assumed loser R. Costs and execution mess are not included, because goblins insist on arriving later.</li>
         <li><strong>Size multipliers:</strong> 1x means the original unit size. Custom sequences repeat the last value if there are more entries than values.</li>
         <li><strong>Scale-in count:</strong> additional scale-ins exclude the initial entry at 0 ATR. Total entries = 1 initial entry + additional scale-ins.</li>
         <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>

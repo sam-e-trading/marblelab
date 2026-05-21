@@ -12,6 +12,8 @@ Show the gross R impact of scaling into a trade at fixed ATR intervals. The v1 m
 - Scale-in every (ATR)
 - Maximum additional scale-ins
 - Scale-in sizing mode: equal, half-size adds, double-size adds, pyramid down, or custom sequence
+- Assumed losing trade in R
+- Expectancy targets in R
 - Selected total move (ATR)
 - Comparison moves as CSV/list, with an auto-generated simple series option
 
@@ -23,6 +25,7 @@ P&L per entry = size multiplier * max(totalMoveATR - entryATR, 0) / stopDistance
 gross weighted unit-R = sum(P&L per entry)
 normalised trade R = gross weighted unit-R / total position size
 additional scale-ins = total entries - 1
+required win rate = (target expectancy R + assumed loss R) / (average winner R + assumed loss R)
 ```
 
 ## Included Presets

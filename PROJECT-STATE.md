@@ -157,6 +157,7 @@ Features:
 - scale-in distance in ATR
 - maximum number of scale-ins
 - scale-in sizing modes: equal, half-size adds, double-size adds, pyramid down, and custom sequence
+- assumed losing trade R and expectancy target inputs
 - selected total move in ATR
 - user-defined comparison move series
 - auto-generated simple comparison series
@@ -167,6 +168,7 @@ Features:
 - selected normalised trade R result
 - gross weighted unit-R sum for context
 - total position size/exposure
+- required win rate stats for break-even and target expectancies
 - entries and scale-ins counts
 - comparison bars across ATR moves
 - compact entry ladder showing each entry's contribution
@@ -179,6 +181,7 @@ P&L per entry = size multiplier × max(totalMoveATR - entryATR, 0) / stopDistanc
 gross weighted unit-R = sum(P&L per entry)
 normalised trade R = gross weighted unit-R / total position size
 additional scale-ins = total entries - 1, capped by maximum additional scale-ins
+required win rate = (target expectancy R + assumed loss R) / (average winner R + assumed loss R)
 ```
 
 ## Supporting docs

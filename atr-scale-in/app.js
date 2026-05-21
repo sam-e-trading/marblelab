@@ -53,12 +53,26 @@ function formatR(value) {
   return `${value.toFixed(2)}R`;
 }
 
+function formatPct(value) {
+  if (!Number.isFinite(value)) return '—';
+  return `${value.toFixed(1)}%`;
+}
+
 function parseMoveSeries(text, fallback) {
   const moves = String(text)
     .split(/[\s,]+/)
     .map(part => Number(part.trim()))
     .filter(number => Number.isFinite(number) && number >= 0);
   const unique = [...new Set(moves.map(move => Number(move.toFixed(2))))];
+  return unique.length ? unique.sort((a, b) => a - b) : fallback;
+}
+
+function parseTargetSeries(text, fallback) {
+  const targets = String(text)
+    .split(/[\s,]+/)
+    .map(part => Number(part.trim()))
+    .filter(number => Number.isFinite(number));
+  const unique = [...new Set(targets.map(target => Number(target.toFixed(2))))];
   return unique.length ? unique.sort((a, b) => a - b) : fallback;
 }
 
@@ -94,6 +108,17 @@ function sizingLabel(mode) {
     pyramidDown: 'pyramid down',
     custom: 'custom sizing'
   }[mode] || 'equal size';
+}
+
+function requiredWinRate(targetExpectancy, averageWinR, averageLossR) {
+  const denominator = averageWinR + averageLossR;
+  if (denominator <= 0) return Infinity;
+  return ((targetExpectancy + averageLossR) / denominator) * 100;
+}
+
+function expectancyAt(winRatePct, averageWinR, averageLossR) {
+  const winProb = winRatePct / 100;
+  return (winProb * averageWinR) - ((1 - winProb) * averageLossR);
 }
 
 function entryLevels(totalMove, scaleDistance, maxScaleIns) {
@@ -139,8 +164,10 @@ function currentInputs() {
   const totalMove = clamp(el('total-move').value, 0, 100, 9);
   const sizingMode = el('sizing-mode').value;
   const sizeSequence = parseSizeSequence(el('size-sequence').value);
+  const assumedLossR = clamp(el('assumed-loss-r').value, 0.01, 20, 1);
+  const expectancyTargets = parseTargetSeries(el('expectancy-targets').value, [0, 0.25, 0.5, 1]);
   const comparisonMoves = parseMoveSeries(el('comparison-moves').value, [3, 5, 7, 9]);
-  return { stopDistance, scaleDistance, maxScaleIns, totalMove, sizingMode, sizeSequence, comparisonMoves };
+  return { stopDistance, scaleDistance, maxScaleIns, totalMove, sizingMode, sizeSequence, assumedLossR, expectancyTargets, comparisonMoves };
 }
 
 function applyPreset(key) {
@@ -202,6 +229,27 @@ function renderMoveBars(inputs) {
   }).join('');
 }
 
+function renderExpectancy(inputs, result) {
+  const winR = Math.max(result.normalisedR, 0);
+  const lossR = inputs.assumedLossR;
+  const breakEven = requiredWinRate(0, winR, lossR);
+  el('expectancy-note').textContent = `Using ${formatR(winR)} average winner and ${formatR(lossR)} average loser.`;
+  el('breakeven-win-rate').textContent = breakEven > 100 ? '>100%' : formatPct(Math.max(0, breakEven));
+  el('expectancy-at-50').textContent = formatR(expectancyAt(50, winR, lossR));
+  el('expectancy-table').innerHTML = inputs.expectancyTargets.map(target => {
+    const required = requiredWinRate(target, winR, lossR);
+    const label = required > 100 ? '>100%' : formatPct(Math.max(0, required));
+    const impossible = required > 100;
+    return `
+      <div class="expectancy-row ${impossible ? 'muted-row' : ''}">
+        <span>${formatR(target)}</span>
+        <div class="expectancy-track"><div class="expectancy-fill" style="width: ${Math.min(100, Math.max(0, required))}%"></div></div>
+        <span class="expectancy-value">${label}</span>
+      </div>
+    `;
+  }).join('');
+}
+
 function renderLadder(inputs, result) {
   const maxPnl = Math.max(...result.entries.map(entry => entry.pnlR), 1);
   const maxMove = Math.max(inputs.totalMove, inputs.scaleDistance, 1);
@@ -255,11 +303,12 @@ function render() {
   const result = calculateStructure(inputs.stopDistance, inputs.scaleDistance, inputs.totalMove, inputs.maxScaleIns, inputs.sizingMode, inputs.sizeSequence);
   renderStats(inputs, result);
   renderMoveBars(inputs);
+  renderExpectancy(inputs, result);
   renderLadder(inputs, result);
   renderPresetComparison(inputs);
 }
 
-['stop-distance', 'scale-distance', 'max-scale-ins', 'total-move', 'sizing-mode', 'size-sequence', 'comparison-moves'].forEach(id => {
+['stop-distance', 'scale-distance', 'max-scale-ins', 'total-move', 'sizing-mode', 'size-sequence', 'assumed-loss-r', 'expectancy-targets', 'comparison-moves'].forEach(id => {
   el(id).addEventListener('input', () => {
     document.querySelectorAll('.preset').forEach(button => button.classList.remove('active'));
     render();
