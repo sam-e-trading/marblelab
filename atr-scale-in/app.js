@@ -5,6 +5,7 @@ const presets = {
     name: 'Tight pyramid',
     stopDistance: 1,
     scaleDistance: 1,
+    maxScaleIns: 9,
     totalMove: 9,
     moves: [3, 5, 7, 9],
     description: '1 ATR stop, adds every 1 ATR.'
@@ -13,6 +14,7 @@ const presets = {
     name: 'Wider structure',
     stopDistance: 2,
     scaleDistance: 2,
+    maxScaleIns: 4,
     totalMove: 9,
     moves: [3, 5, 7, 9],
     description: '2 ATR stop, adds every 2 ATRs.'
@@ -21,6 +23,7 @@ const presets = {
     name: 'Slow builder',
     stopDistance: 3,
     scaleDistance: 3,
+    maxScaleIns: 3,
     totalMove: 12,
     moves: [3, 6, 9, 12],
     description: '3 ATR stop, adds every 3 ATRs.'
@@ -53,17 +56,18 @@ function parseMoveSeries(text, fallback) {
   return unique.length ? unique.sort((a, b) => a - b) : fallback;
 }
 
-function entryLevels(totalMove, scaleDistance) {
+function entryLevels(totalMove, scaleDistance, maxScaleIns) {
   const levels = [0];
   if (scaleDistance <= 0) return levels;
-  for (let level = scaleDistance; level <= totalMove + 1e-9; level += scaleDistance) {
+  const scaleLimit = Math.max(0, Math.floor(maxScaleIns));
+  for (let level = scaleDistance; level <= totalMove + 1e-9 && levels.length <= scaleLimit; level += scaleDistance) {
     levels.push(Number(level.toFixed(10)));
   }
   return levels;
 }
 
-function calculateStructure(stopDistance, scaleDistance, totalMove) {
-  const levels = entryLevels(totalMove, scaleDistance);
+function calculateStructure(stopDistance, scaleDistance, totalMove, maxScaleIns) {
+  const levels = entryLevels(totalMove, scaleDistance, maxScaleIns);
   const entries = levels.map(level => ({
     level,
     pnlR: Math.max(totalMove - level, 0) / stopDistance
@@ -81,15 +85,17 @@ function calculateStructure(stopDistance, scaleDistance, totalMove) {
 function currentInputs() {
   const stopDistance = clamp(el('stop-distance').value, 0.1, 20, 1);
   const scaleDistance = clamp(el('scale-distance').value, 0.1, 20, 1);
+  const maxScaleIns = Math.round(clamp(el('max-scale-ins').value, 0, 50, 9));
   const totalMove = clamp(el('total-move').value, 0, 100, 9);
   const comparisonMoves = parseMoveSeries(el('comparison-moves').value, [3, 5, 7, 9]);
-  return { stopDistance, scaleDistance, totalMove, comparisonMoves };
+  return { stopDistance, scaleDistance, maxScaleIns, totalMove, comparisonMoves };
 }
 
 function applyPreset(key) {
   const preset = presets[key] || presets[defaultPresetKey];
   el('stop-distance').value = preset.stopDistance;
   el('scale-distance').value = preset.scaleDistance;
+  el('max-scale-ins').value = preset.maxScaleIns;
   el('total-move').value = preset.totalMove;
   el('comparison-moves').value = preset.moves.join(', ');
   document.querySelectorAll('.preset').forEach(button => {
@@ -119,15 +125,15 @@ function renderStats(inputs, result) {
   el('stat-entries').textContent = result.entryCount;
   el('stat-scale-ins').textContent = result.scaleIns;
   el('stat-last-entry').textContent = formatAtr(result.lastEntry);
-  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop and ${formatAtr(inputs.scaleDistance)} scale spacing creates ${formatR(result.totalR)} gross across ${result.entryCount} equal entries.`;
-  el('comparison-note').textContent = `${formatAtr(inputs.stopDistance)} stop · every ${formatAtr(inputs.scaleDistance)}`;
+  el('readout').textContent = `A ${formatAtr(inputs.totalMove)} move with a ${formatAtr(inputs.stopDistance)} stop, ${formatAtr(inputs.scaleDistance)} scale spacing, and a ${inputs.maxScaleIns} scale-in cap creates ${formatR(result.totalR)} gross across ${result.entryCount} equal entries.`;
+  el('comparison-note').textContent = `${formatAtr(inputs.stopDistance)} stop · every ${formatAtr(inputs.scaleDistance)} · max ${inputs.maxScaleIns} scale-ins`;
   el('ladder-note').textContent = `0 to ${formatAtr(inputs.totalMove)}`;
 }
 
 function renderMoveBars(inputs) {
   const results = inputs.comparisonMoves.map(move => ({
     move,
-    result: calculateStructure(inputs.stopDistance, inputs.scaleDistance, move)
+    result: calculateStructure(inputs.stopDistance, inputs.scaleDistance, move, inputs.maxScaleIns)
   }));
   const maxR = Math.max(...results.map(item => item.result.totalR), 1);
   el('move-bars').innerHTML = results.map(item => {
@@ -165,12 +171,12 @@ function renderLadder(inputs, result) {
 function renderPresetComparison(inputs) {
   const moves = inputs.comparisonMoves;
   const allResults = Object.values(presets).flatMap(preset =>
-    moves.map(move => calculateStructure(preset.stopDistance, preset.scaleDistance, move).totalR)
+    moves.map(move => calculateStructure(preset.stopDistance, preset.scaleDistance, move, preset.maxScaleIns).totalR)
   );
   const maxR = Math.max(...allResults, 1);
   el('preset-comparison').innerHTML = Object.values(presets).map(preset => {
     const rows = moves.map(move => {
-      const result = calculateStructure(preset.stopDistance, preset.scaleDistance, move);
+      const result = calculateStructure(preset.stopDistance, preset.scaleDistance, move, preset.maxScaleIns);
       const width = (result.totalR / maxR) * 100;
       return `
         <div class="mini-row">
@@ -192,14 +198,14 @@ function renderPresetComparison(inputs) {
 
 function render() {
   const inputs = currentInputs();
-  const result = calculateStructure(inputs.stopDistance, inputs.scaleDistance, inputs.totalMove);
+  const result = calculateStructure(inputs.stopDistance, inputs.scaleDistance, inputs.totalMove, inputs.maxScaleIns);
   renderStats(inputs, result);
   renderMoveBars(inputs);
   renderLadder(inputs, result);
   renderPresetComparison(inputs);
 }
 
-['stop-distance', 'scale-distance', 'total-move', 'comparison-moves'].forEach(id => {
+['stop-distance', 'scale-distance', 'max-scale-ins', 'total-move', 'comparison-moves'].forEach(id => {
   el(id).addEventListener('input', () => {
     document.querySelectorAll('.preset').forEach(button => button.classList.remove('active'));
     render();

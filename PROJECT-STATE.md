@@ -155,6 +155,7 @@ Features:
 
 - stop distance in ATR
 - scale-in distance in ATR
+- maximum number of scale-ins
 - selected total move in ATR
 - user-defined comparison move series
 - auto-generated simple comparison series
@@ -173,7 +174,7 @@ Formula:
 ```text
 P&L per entry = max(totalMoveATR - entryATR, 0) / stopDistanceATR R
 total R = sum(P&L per entry)
-scale-ins = entries - 1
+scale-ins = entries - 1, capped by maximum scale-ins
 ```
 
 ## Supporting docs

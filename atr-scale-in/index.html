@@ -51,6 +51,10 @@
           <input id="scale-distance" type="number" min="0.1" max="20" step="0.1" value="1" />
         </label>
 
+        <label>Maximum scale-ins
+          <input id="max-scale-ins" type="number" min="0" max="50" step="1" value="9" />
+        </label>
+
         <label>Selected total move (ATR)
           <input id="total-move" type="number" min="0" max="100" step="0.1" value="9" />
         </label>
@@ -60,7 +64,7 @@
         </label>
 
         <button id="auto-series" type="button">Auto-generate simple series</button>
-        <p class="note">Model: first entry at 0 ATR, then add one equal unit every scale-in distance up to the selected move. Each unit uses the same initial size; 1R is based on one unit's stop distance.</p>
+        <p class="note">Model: first entry at 0 ATR, then add one equal unit every scale-in distance up to the selected move or maximum scale-in cap. Each unit uses the same initial size; 1R is based on one unit's stop distance.</p>
       </aside>
 
       <section class="panel dashboard">
@@ -74,7 +78,7 @@
         <div class="result-strip">
           <div>
             <p class="eyebrow">Readout</p>
-            <strong id="readout">A 9 ATR move with a 1 ATR stop and 1 ATR scale spacing creates 45.00R gross across 10 equal entries.</strong>
+            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, and a 9 scale-in cap creates 45.00R gross across 10 equal entries.</strong>
           </div>
         </div>
 
@@ -115,7 +119,7 @@
       <ol>
         <li><strong>Gross scaling model:</strong> P&L per entry = max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
         <li><strong>Equal unit size:</strong> every entry uses the same initial unit size. One unit stopped at the chosen stop distance equals -1R.</li>
-        <li><strong>Scale-in count:</strong> scale-ins exclude the initial entry at 0 ATR.</li>
+        <li><strong>Scale-in count:</strong> scale-ins exclude the initial entry at 0 ATR and stop once the maximum scale-in cap is reached.</li>
         <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>
       </ol>
     </section>
