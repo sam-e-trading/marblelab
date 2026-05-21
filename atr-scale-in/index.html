@@ -55,6 +55,20 @@
           <input id="max-scale-ins" type="number" min="0" max="50" step="1" value="9" />
         </label>
 
+        <label>Scale-in sizing mode
+          <select id="sizing-mode">
+            <option value="equal" selected>Equal size — 1x, 1x, 1x</option>
+            <option value="half">Half-size adds — 1x, 0.5x, 0.5x</option>
+            <option value="double">Double-size adds — 1x, 2x, 2x</option>
+            <option value="pyramidDown">Pyramid down — 1x, 0.75x, 0.5x...</option>
+            <option value="custom">Custom sequence</option>
+          </select>
+        </label>
+
+        <label>Custom size sequence
+          <textarea id="size-sequence" rows="2" placeholder="1, 0.5, 0.25">1, 1, 1</textarea>
+        </label>
+
         <label>Selected total move (ATR)
           <input id="total-move" type="number" min="0" max="100" step="0.1" value="9" />
         </label>
@@ -64,7 +78,7 @@
         </label>
 
         <button id="auto-series" type="button">Auto-generate simple series</button>
-        <p class="note">Model: first entry at 0 ATR, then add additional scale-ins every scale-in distance up to the selected move or maximum additional scale-in cap. Each unit uses the same initial size; 1R is based on one unit's stop distance.</p>
+        <p class="note">Model: first entry at 0 ATR, then add additional scale-ins every scale-in distance up to the selected move or maximum additional scale-in cap. Size multipliers weight each entry; 1R is based on one 1x unit's stop distance.</p>
       </aside>
 
       <section class="panel dashboard">
@@ -72,13 +86,13 @@
           <article><span id="stat-total-r">4.50R</span><small>normalised trade R</small></article>
           <article><span id="stat-gross-r">45.00R</span><small>gross unit-R sum</small></article>
           <article><span id="stat-entries">10</span><small>total entries</small></article>
-          <article><span id="stat-scale-ins">9</span><small>scale-ins</small></article>
+          <article><span id="stat-total-size">10x</span><small>total position size</small></article>
         </div>
 
         <div class="result-strip">
           <div>
             <p class="eyebrow">Readout</p>
-            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, and 9 additional scale-ins averages 4.50R across 10 total entries: 1 initial + 9 scale-ins. The summed gross unit-R is 45.00R before normalising.</strong>
+            <strong id="readout">A 9 ATR move with a 1 ATR stop, 1 ATR scale spacing, 9 additional scale-ins, and equal size averages 4.50R across 10x total size. That is 10 entries: 1 initial + 9 scale-ins. The summed weighted unit-R is 45.00R before normalising.</strong>
           </div>
         </div>
 
@@ -96,7 +110,7 @@
       <div class="panel-head">
         <div>
           <h2>Entry ladder</h2>
-          <p class="subtle">Compact view of where equal-sized entries are added and how much each contributes at the selected move.</p>
+          <p class="subtle">Compact view of where entries are added, their size multipliers, and how much each contributes at the selected move.</p>
         </div>
         <span id="ladder-note" class="pill">0 to 9 ATR</span>
       </div>
@@ -117,9 +131,9 @@
     <section class="panel explainer">
       <h2>Assumptions</h2>
       <ol>
-        <li><strong>Entry contribution:</strong> P&L per entry = max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
-        <li><strong>Headline result:</strong> normalised trade R = summed entry R divided by total entries. The gross unit-R sum is still shown separately for context.</li>
-        <li><strong>Equal unit size:</strong> every entry uses the same initial unit size. One unit stopped at the chosen stop distance equals -1R.</li>
+        <li><strong>Entry contribution:</strong> P&L per entry = size multiplier × max(total move ATR - entry ATR, 0) / stop distance ATR R.</li>
+        <li><strong>Headline result:</strong> normalised trade R = summed weighted entry R divided by total position size. The gross weighted unit-R sum is still shown separately for context.</li>
+        <li><strong>Size multipliers:</strong> 1x means the original unit size. Custom sequences repeat the last value if there are more entries than values.</li>
         <li><strong>Scale-in count:</strong> additional scale-ins exclude the initial entry at 0 ATR. Total entries = 1 initial entry + additional scale-ins.</li>
         <li><strong>Not a trade-management simulator:</strong> real stop movement, slippage, spread, partial exits, skipped fills, and position limits can change the result. A breakeven-stop simplification can be useful later, but this v1 keeps the path out of it.</li>
       </ol>

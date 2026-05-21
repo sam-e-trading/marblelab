@@ -41,8 +41,9 @@ h2 { margin: 0; font-size: 1.08rem; letter-spacing: 0; }
 .panel-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 16px; }
 .panel-head.compact { margin-bottom: 12px; }
 label { display: grid; gap: 8px; color: var(--honest-green); font-weight: 800; margin-bottom: 16px; }
-input, textarea { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 12px 13px; background: rgba(0,0,0,.24); color: var(--white); font: inherit; }
+input, textarea, select { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 12px 13px; background: rgba(0,0,0,.24); color: var(--white); font: inherit; }
 textarea { resize: vertical; min-height: 82px; line-height: 1.4; }
+select option { color: var(--trust-black); }
 button { border: 0; border-radius: 14px; padding: 12px 14px; background: var(--fresh-green); color: var(--trust-black); font-weight: 900; cursor: pointer; font: inherit; }
 button:hover { filter: brightness(1.04); transform: translateY(-1px); }
 button.ghost { background: transparent; color: var(--white); border: 1px solid var(--border); }
@@ -73,6 +74,7 @@ button.ghost { background: transparent; color: var(--white); border: 1px solid v
 .ladder-fill { height: 100%; background: rgba(207,252,84,.22); border-right: 3px solid var(--fresh-green); }
 .ladder-dot { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 999px; background: var(--bold-orange); transform: translate(-50%, -50%); box-shadow: 0 0 0 5px rgba(255,92,0,.15); }
 .ladder-r { color: var(--white); font-weight: 900; text-align: right; }
+.ladder-r small { color: var(--muted); font-weight: 800; }
 .preset-comparison { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .structure-card { border: 1px solid var(--border); border-radius: 20px; background: rgba(255,255,255,.045); padding: 16px; }
 .structure-card h3 { margin: 0 0 6px; font-size: 1rem; }

@@ -156,6 +156,7 @@ Features:
 - stop distance in ATR
 - scale-in distance in ATR
 - maximum number of scale-ins
+- scale-in sizing modes: equal, half-size adds, double-size adds, pyramid down, and custom sequence
 - selected total move in ATR
 - user-defined comparison move series
 - auto-generated simple comparison series
@@ -164,7 +165,8 @@ Features:
   - wider structure: 2 ATR stop, scale every 2 ATRs
   - slow builder: 3 ATR stop, scale every 3 ATRs
 - selected normalised trade R result
-- gross unit-R sum for context
+- gross weighted unit-R sum for context
+- total position size/exposure
 - entries and scale-ins counts
 - comparison bars across ATR moves
 - compact entry ladder showing each entry's contribution
@@ -173,9 +175,9 @@ Features:
 Formula:
 
 ```text
-P&L per entry = max(totalMoveATR - entryATR, 0) / stopDistanceATR R
-gross unit-R = sum(P&L per entry)
-normalised trade R = gross unit-R / total entries
+P&L per entry = size multiplier × max(totalMoveATR - entryATR, 0) / stopDistanceATR R
+gross weighted unit-R = sum(P&L per entry)
+normalised trade R = gross weighted unit-R / total position size
 additional scale-ins = total entries - 1, capped by maximum additional scale-ins
 ```
 
