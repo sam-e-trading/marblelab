@@ -21,14 +21,22 @@ body {
     radial-gradient(circle at 88% 16%, rgba(255,92,0,.13), transparent 24rem),
     linear-gradient(135deg, #141d22, var(--trust-black));
 }
-.shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 48px; }
+.shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 48px; }
 .panel { border: 1px solid var(--border); background: var(--panel); border-radius: 28px; box-shadow: 0 24px 80px rgba(0,0,0,.22); }
+.topbar { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; color: var(--muted); margin: 0 4px 16px; font-size: .9rem; }
+.topbar a { color: var(--fresh-green); text-decoration: none; font-weight: 900; }
+.topbar a:hover { text-decoration: underline; }
 .hero { padding: clamp(28px, 6vw, 56px); margin-bottom: 18px; }
 .eyebrow { margin: 0 0 10px; color: var(--fresh-green); text-transform: uppercase; font-size: .72rem; font-weight: 900; letter-spacing: .15em; }
 h1 { font-size: clamp(3rem, 10vw, 7rem); line-height: .86; margin: 0 0 18px; }
 h2 { margin: 0 0 10px; font-size: clamp(1.7rem, 4vw, 2.5rem); }
 .lede, .tool-card p { color: var(--muted); line-height: 1.55; max-width: 760px; }
 .lede { font-size: 1.1rem; margin: 0; }
+.story { padding: clamp(24px, 4vw, 38px); margin-bottom: 18px; }
+.story h2 { max-width: 820px; }
+.story-copy { display: grid; gap: 12px; max-width: 850px; color: var(--muted); line-height: 1.62; }
+.story-copy p { margin: 0; }
+.story-copy strong { color: var(--white); }
 .tools-grid { display: grid; gap: 18px; }
 .tool-card { padding: 26px; display: flex; justify-content: space-between; gap: 22px; align-items: end; }
 .button { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; border-radius: 14px; padding: 13px 16px; background: var(--fresh-green); color: var(--trust-black); text-decoration: none; font-weight: 900; }
