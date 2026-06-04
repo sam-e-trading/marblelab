@@ -3,17 +3,70 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Position Sizing Calculator — Marble Lab</title>
-  <meta name="description" content="Calculate 1R, position size, expected return, expectancy, and Monte Carlo drawdown from practical trading objectives." />
-  <meta property="og:title" content="Position Sizing Calculator" />
-  <meta property="og:description" content="Estimate 1R, trade size, expected return, expectancy, and drawdown from your account and risk settings." />
-    <link rel="canonical" href="https://marblelab.marketmates.com/position-sizing-calculator/" />
+  <title>Position Sizing Calculator | 1R Risk Tool</title>
+  <meta name="description" content="Calculate 1R risk, position size, expected return, expectancy, and Monte Carlo drawdown from your account and trade objectives." />
+  <link rel="canonical" href="https://marblelab.marketmates.com/position-sizing-calculator/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://marblelab.marketmates.com/position-sizing-calculator/" />
+  <meta property="og:title" content="Position Sizing Calculator — 1R Risk Tool" />
+  <meta property="og:description" content="Estimate 1R, trade size, expected return, expectancy, and drawdown from your account and risk settings." />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Position Sizing Calculator" />
+  <meta name="twitter:title" content="Position Sizing Calculator — 1R Risk Tool" />
   <meta name="twitter:description" content="Estimate 1R, trade size, expected return, expectancy, and drawdown from your account and risk settings." />
   <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Position Sizing Calculator",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "url": "https://marblelab.marketmates.com/position-sizing-calculator/",
+        "description": "A free educational trading risk calculator for estimating 1R, position size, expectancy, expected return, and Monte Carlo drawdown.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MarketMates"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does 1R mean in trading?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "1R is the amount you plan to risk on a trade. If your planned loss at the stop is $500, then 1R equals $500. Measuring trades in R keeps position sizing focused on risk rather than emotion."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How should I use the position sizing calculator?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Start with your account size, win rate, risk/reward ratio, and trade sample. Then adjust risk per trade until the expected return and drawdown both look survivable."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the calculator predict future returns?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. It is an educational model. It uses simplified assumptions to show how risk per trade, expectancy, and drawdown can interact over a sequence of trades."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <main class="shell">
@@ -110,6 +163,19 @@
         <li>Check the estimated drawdown. If it is too high, reduce risk per trade. Annoying, yes. Usually wise.</li>
         <li>Your <strong>1R risk amount</strong> is the dollar amount to use when calculating live trade size from stop distance.</li>
       </ol>
+    </section>
+
+    <section class="panel explainer">
+      <h2>Position sizing FAQs</h2>
+      <p>These answers are deliberately plain-English. Position sizing is hard enough without dressing it up as wizardry.</p>
+      <h3>What does 1R mean in trading?</h3>
+      <p><strong>1R</strong> is the amount you plan to risk on a trade. If your planned loss at the stop is $500, then 1R equals $500. Measuring trades in R keeps position sizing focused on risk rather than emotion.</p>
+      <h3>How should I use this calculator?</h3>
+      <p>Start with your account size, win rate, risk/reward ratio, and trade sample. Then adjust risk per trade until the expected return and estimated drawdown both look survivable.</p>
+      <h3>Does this predict future returns?</h3>
+      <p>No. It is an educational model. It uses simplified assumptions to show how risk per trade, expectancy, and drawdown can interact over a sequence of trades.</p>
+      <h3>Related Marble Lab tools</h3>
+      <p>Try the <a href="../position-sizing/">Position Sizing Game</a> to feel the sequence risk, or the <a href="../drawdown-recovery/">Drawdown Recovery Calculator</a> to see why deep drawdowns are such annoying little beasts.</p>
     </section>
 
     <footer class="footer">

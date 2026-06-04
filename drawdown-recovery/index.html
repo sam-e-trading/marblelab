@@ -3,17 +3,70 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Drawdown Recovery Calculator — Marble Lab</title>
-  <meta name="description" content="See the return required to recover from trading drawdowns, with simple visuals for recovery curves and balance impact." />
-  <meta property="og:title" content="Drawdown Recovery Calculator" />
-  <meta property="og:description" content="Visualise how much return is needed to recover after a trading drawdown and why deeper losses hurt more." />
-    <link rel="canonical" href="https://marblelab.marketmates.com/drawdown-recovery/" />
+  <title>Drawdown Recovery Calculator | Trading Losses</title>
+  <meta name="description" content="See the return needed to recover from trading drawdowns, with simple visuals for recovery curves, balance impact, and breakeven maths." />
+  <link rel="canonical" href="https://marblelab.marketmates.com/drawdown-recovery/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://marblelab.marketmates.com/drawdown-recovery/" />
+  <meta property="og:title" content="Drawdown Recovery Calculator — Trading Losses" />
+  <meta property="og:description" content="Visualise how much return is needed to recover after a trading drawdown and why deeper losses hurt more." />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Drawdown Recovery Calculator" />
+  <meta name="twitter:title" content="Drawdown Recovery Calculator — Trading Losses" />
   <meta name="twitter:description" content="Visualise how much return is needed to recover after a trading drawdown and why deeper losses hurt more." />
   <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Drawdown Recovery Calculator",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "url": "https://marblelab.marketmates.com/drawdown-recovery/",
+        "description": "A free educational calculator showing the return required to recover from trading drawdowns and why losses and recovery are not symmetrical.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MarketMates"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How do you calculate drawdown recovery?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Drawdown recovery is calculated as drawdown divided by one minus the drawdown. A 30% drawdown needs a 42.9% gain because the recovery is earned from the smaller remaining balance."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does a 50% drawdown need a 100% gain to recover?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "After a 50% drawdown, half the capital remains. Doubling that remaining capital is required to return to breakeven, so the recovery return is 100%."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is drawdown recovery the same as making back the loss percentage?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Losses and recovery are not symmetrical. The deeper the drawdown, the larger the percentage gain required to recover."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <main class="shell">
@@ -96,6 +149,19 @@
     <section class="panel explainer">
       <h2>Why it matters</h2>
       <p>A drawdown reduces the capital base you are trying to grow from. That is why the recovery return is always larger than the loss percentage. Down 10% is annoying. Down 50% means you need to double what remains just to get back to breakeven.</p>
+    </section>
+
+    <section class="panel explainer">
+      <h2>Drawdown recovery FAQs</h2>
+      <p>The headline lesson: losses and recovery are not symmetrical. Markets are rude like that.</p>
+      <h3>How do you calculate drawdown recovery?</h3>
+      <p>Drawdown recovery is calculated as <strong>drawdown ÷ (1 − drawdown)</strong>. A 30% drawdown needs a 42.9% gain because the recovery is earned from the smaller remaining balance.</p>
+      <h3>Why does a 50% drawdown need a 100% gain?</h3>
+      <p>After a 50% drawdown, half the capital remains. You need to double that remaining capital to get back to breakeven.</p>
+      <h3>Is recovery the same as making back the loss percentage?</h3>
+      <p>No. Down 20% needs +25% to recover. Down 40% needs +66.7%. The bigger the hole, the steeper the climb.</p>
+      <h3>Related Marble Lab tools</h3>
+      <p>Use the <a href="../position-sizing-calculator/">Position Sizing Calculator</a> to test whether a setup’s drawdown is tolerable, or the <a href="../compounding-returns/">Compounding Returns Calculator</a> to compare smooth and bumpy growth paths.</p>
     </section>
 
     <footer class="footer">

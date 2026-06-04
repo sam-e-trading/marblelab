@@ -55,9 +55,12 @@ button.ghost { background: transparent; color: var(--white); border: 1px solid v
 .chart-wrap { border: 1px solid var(--border); border-radius: 22px; background: rgba(0,0,0,.18); padding: 14px; overflow: hidden; }
 canvas { display: block; width: 100%; height: auto; }
 .explainer { margin-top: 18px; }
+.explainer p { color: var(--muted); max-width: 920px; line-height: 1.6; }
+.explainer h3 { margin-top: 18px; }
 .explainer ol { margin: 14px 0 0; padding-left: 1.25rem; }
 .explainer li { color: var(--muted); line-height: 1.6; margin: 8px 0; }
 .explainer strong { color: var(--white); }
+.explainer a { color: var(--fresh-green); font-weight: 900; text-decoration-thickness: .08em; text-underline-offset: .18em; }
 .footer { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; color: var(--muted); padding: 20px 4px 0; font-size: .9rem; }
 @media (max-width: 1000px) {
   .hero, .grid, .chart-grid, .result-strip { grid-template-columns: 1fr; }

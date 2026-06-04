@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trading Fees Calculator | Cost of Fees Tool</title>
+  <meta name="description" content="Estimate trading fee drag from spreads, commissions, swap, and platform costs, then compare gross and net account growth over time." />
+  <link rel="canonical" href="https://marblelab.marketmates.com/cost-of-fees/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://marblelab.marketmates.com/cost-of-fees/" />
+  <meta property="og:title" content="Trading Fees Calculator — Cost of Fees Tool" />
+  <meta property="og:description" content="Compare gross returns with the net impact of trading costs, spreads, commissions, swap, and platform fees over time." />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Trading Fees Calculator — Cost of Fees Tool" />
+  <meta name="twitter:description" content="Compare gross returns with the net impact of trading costs, spreads, commissions, swap, and platform fees over time." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a href="../">← Marble Lab</a>
+      <span>Educational only · Not financial advice</span>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Fee drag reality check</p>
+        <h1>Cost of Fees Calculator</h1>
+        <p class="lede">Compare the tidy gross return in your head with the net path after spreads, commissions, swap, and monthly account costs. Fees are small until they start eating the sandwich.</p>
+      </div>
+      <div class="score-card">
+        <span>Projected fee drag</span>
+        <strong id="fee-drag-headline">0.56% / month</strong>
+        <small id="fee-drag-context">$560 monthly cost estimate</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel controls">
+        <div class="panel-head">
+          <h2>Inputs</h2>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+
+        <div class="preset-grid" aria-label="Example presets">
+          <button class="preset" type="button" data-preset="low">Low-cost</button>
+          <button class="preset active" type="button" data-preset="active">Active trader</button>
+          <button class="preset" type="button" data-preset="goblin">Overtrading goblin</button>
+        </div>
+
+        <label><span class="label-row"><span>Starting balance</span><span class="tip" tabindex="0" data-tip="The account balance at the start of the projection.">?</span></span>
+          <input id="capital" type="number" min="100" max="100000000" step="1000" value="100000" />
+        </label>
+
+        <div class="input-pair">
+          <label><span class="label-row"><span>Avg trade notional</span><span class="tip" tabindex="0" data-tip="Approximate value controlled per trade. For simple fee maths, this is the amount spread cost is applied to.">?</span></span>
+            <input id="trade-size" type="number" min="1" max="100000000" step="1000" value="50000" />
+          </label>
+          <label><span class="label-row"><span>Trades / month</span><span class="tip" tabindex="0" data-tip="Round-trip trades per month. Opening and closing one idea counts as one trade here.">?</span></span>
+            <input id="trades-month" type="number" min="0" max="10000" step="1" value="20" />
+          </label>
+        </div>
+
+        <label><span class="label-row"><span>Spread cost: <strong id="spread-label">0.020%</strong></span><span class="tip" tabindex="0" data-tip="Estimated round-trip spread/slippage cost as a percentage of trade notional. Example: 0.02% on $50,000 is $10 per trade.">?</span></span>
+          <input id="spread-cost" type="range" min="0" max="1" step="0.005" value="0.02" />
+        </label>
+
+        <div class="input-pair">
+          <label><span class="label-row"><span>Commission amount</span><span class="tip" tabindex="0" data-tip="Commission charged per side or per round-turn, depending on the selector.">?</span></span>
+            <input id="commission" type="number" min="0" max="100000" step="0.5" value="3.5" />
+          </label>
+          <label><span class="label-row"><span>Commission basis</span><span class="tip" tabindex="0" data-tip="Per side doubles the commission to estimate the full open-and-close cost.">?</span></span>
+            <select id="commission-basis">
+              <option value="side">Per side</option>
+              <option value="round">Round-turn</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="input-pair">
+          <label><span class="label-row"><span>Swap / overnight / month</span><span class="tip" tabindex="0" data-tip="Optional recurring holding cost estimate. Use zero if it does not apply.">?</span></span>
+            <input id="swap-cost" type="number" min="0" max="1000000" step="10" value="120" />
+          </label>
+          <label><span class="label-row"><span>Platform fee / month</span><span class="tip" tabindex="0" data-tip="Optional platform, data, account, or subscription fee.">?</span></span>
+            <input id="platform-fee" type="number" min="0" max="1000000" step="10" value="100" />
+          </label>
+        </div>
+
+        <div class="input-pair">
+          <label><span class="label-row"><span>Gross monthly return: <strong id="return-label">2.00%</strong></span><span class="tip" tabindex="0" data-tip="The before-cost monthly return assumption applied to both gross and net paths.">?</span></span>
+            <input id="gross-return" type="range" min="-10" max="20" step="0.05" value="2" />
+          </label>
+          <label><span class="label-row"><span>Time horizon (months)</span><span class="tip" tabindex="0" data-tip="How many monthly periods to project.">?</span></span>
+            <input id="months" type="number" min="1" max="600" step="1" value="24" />
+          </label>
+        </div>
+
+        <button id="calculate">Recalculate</button>
+        <p class="note">This is deliberately simple: constant trade activity, constant fee assumptions, and one gross return path. Real execution can be less polite.</p>
+      </aside>
+
+      <section class="panel dashboard">
+        <div class="stats">
+          <article><span id="monthly-cost">$560</span><small>monthly cost drag</small></article>
+          <article><span id="annual-drag">6.7%</span><small>annualised drag on start</small></article>
+          <article><span id="gross-ending">$160,844</span><small>gross ending balance</small></article>
+          <article><span id="net-ending">$143,807</span><small>net ending balance</small></article>
+        </div>
+
+        <div class="result-strip">
+          <div>
+            <p class="eyebrow">Readout</p>
+            <strong id="readout">Fees consume 22.1% of the projected gross profit over 24 months.</strong>
+          </div>
+          <div>
+            <p class="eyebrow">Cost mix</p>
+            <strong id="cost-mix">Spreads are doing most of the nibbling here.</strong>
+          </div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="chart-wrap">
+            <h3>Gross vs net balance path</h3>
+            <canvas id="growth-chart" width="760" height="320" aria-label="Gross and net balance projection chart"></canvas>
+          </div>
+          <div class="chart-wrap">
+            <h3>Monthly cost breakdown</h3>
+            <canvas id="cost-chart" width="760" height="320" aria-label="Monthly fee cost breakdown chart"></canvas>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel summary-panel">
+      <div class="panel-head">
+        <h2>Fee impact summary</h2>
+        <span id="summary-pill" class="pill">24 month projection</span>
+      </div>
+      <div class="summary-table">
+        <article class="summary-card"><span>Total fees paid</span><strong id="total-fees">$13,440</strong></article>
+        <article class="summary-card"><span>Gross profit</span><strong id="gross-profit">$60,844</strong></article>
+        <article class="summary-card"><span>Net profit</span><strong id="net-profit">$43,807</strong></article>
+        <article class="summary-card"><span>Profit consumed</span><strong id="profit-consumed">22.1%</strong></article>
+      </div>
+    </section>
+
+    <section class="panel monthly-panel">
+      <div class="panel-head">
+        <h2>Projection table</h2>
+        <span class="pill">Every few months, not every tiny spreadsheet cell</span>
+      </div>
+      <div id="projection-table" class="projection-table" aria-label="Gross and net fee projection table"></div>
+    </section>
+
+    <section class="panel explainer">
+      <h2>How to use it</h2>
+      <ol>
+        <li>Enter your average trade size and monthly trade count.</li>
+        <li>Estimate spread or slippage as a percentage of notional. Keep it honest; tiny assumptions compound too.</li>
+        <li>Add commission, swap, and platform costs that apply to your setup.</li>
+        <li>Compare the gross ending balance with the net balance, then check how much gross profit the fees consumed.</li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <span>Marble Lab · Cost of Fees Calculator</span>
+      <span>Free educational tool · Runs locally in your browser</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

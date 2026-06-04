@@ -3,17 +3,70 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MT5 R-Multiple Analyst — Marble Lab</title>
-  <meta name="description" content="Upload an MT5 XLSX statement and analyse closed trades by R-multiple, stop-loss risk, symbols, sides, and scale mode." />
-  <meta property="og:title" content="MT5 R-Multiple Analyst" />
-  <meta property="og:description" content="Review MT5 statement trades in R-multiples using stop-loss max loss, median loss estimates, or fixed-dollar 1R." />
-    <link rel="canonical" href="https://marblelab.marketmates.com/r-multiple-analyst/" />
+  <title>MT5 R-Multiple Analyst | XLSX Statement Tool</title>
+  <meta name="description" content="Upload an MT5 XLSX statement and analyse closed trades by R-multiple, stop-loss risk, symbols, sides, expectancy, and scale mode." />
+  <link rel="canonical" href="https://marblelab.marketmates.com/r-multiple-analyst/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://marblelab.marketmates.com/r-multiple-analyst/" />
+  <meta property="og:title" content="MT5 R-Multiple Analyst — XLSX Statement Tool" />
+  <meta property="og:description" content="Review MT5 statement trades in R-multiples using stop-loss max loss, median loss estimates, or fixed-dollar 1R." />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="MT5 R-Multiple Analyst" />
+  <meta name="twitter:title" content="MT5 R-Multiple Analyst — XLSX Statement Tool" />
   <meta name="twitter:description" content="Review MT5 statement trades in R-multiples using stop-loss max loss, median loss estimates, or fixed-dollar 1R." />
   <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "MT5 R-Multiple Analyst",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "url": "https://marblelab.marketmates.com/r-multiple-analyst/",
+        "description": "A free browser-based MT5 XLSX statement analyser for reviewing closed trades in R-multiples, expectancy, symbols, sides, and scale mode.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MarketMates"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is an R-multiple?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "An R-multiple measures a trade result against the amount planned at risk. A +2R trade made twice the planned risk; a -1R trade lost the planned risk."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the MT5 R-Multiple Analyst upload my statement?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The XLSX statement is parsed locally in the browser. Marble Lab does not need to upload the file to analyse it."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which R method should I use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Use stop-loss max loss when you know the planned gross loss at the stop. If that is missing, median gross loss estimate can give a rough fallback, while fixed-dollar 1R is useful for manual compatibility."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <main class="shell">
@@ -132,6 +185,19 @@
         <li><strong>Future Phase 2:</strong> a later MT5 EA or algo export could record max gross loss, original per-trade risk, MAE/MFE, and intended 1R so users can upload that alongside the statement for more accurate per-trade R.</li>
         <li><strong>Educational use only:</strong> outputs are for trade review and learning, not financial advice or a recommendation to trade.</li>
       </ol>
+    </section>
+
+    <section class="panel explainer">
+      <h2>R-multiple analysis FAQs</h2>
+      <p>R-multiples help separate trade quality from account size. They do not magically fix the trade, but they do make the review less mushy.</p>
+      <h3>What is an R-multiple?</h3>
+      <p>An <strong>R-multiple</strong> measures a trade result against the amount planned at risk. A +2R trade made twice the planned risk; a -1R trade lost the planned risk.</p>
+      <h3>Does this upload my MT5 statement?</h3>
+      <p>No. The XLSX statement is parsed locally in your browser. Marble Lab does not need to upload the file to analyse it.</p>
+      <h3>Which R method should I use?</h3>
+      <p>Use <strong>stop-loss max loss</strong> when you know the planned gross loss at the stop. If that is missing, median gross loss estimate can give a rough fallback, while fixed-dollar 1R remains useful for manual compatibility.</p>
+      <h3>Related Marble Lab tools</h3>
+      <p>Use the <a href="../edge-simulator/">Trading Edge Simulator</a> to model expectancy, or the <a href="../position-sizing-calculator/">Position Sizing Calculator</a> to connect R back to account risk.</p>
     </section>
 
     <footer class="footer">
