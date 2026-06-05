@@ -3,16 +3,69 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Position Sizing Game | Trading Risk Simulator</title>
-  <meta name="description" content="Run a trading risk simulator to test position size, win rate, payoff ratio, expectancy, drawdown, and equity curves over repeated trades." />
+  <title>MarketMates Position Sizing Game | Risk Simulator</title>
+  <meta name="description" content="Play the MarketMates position sizing game to test risk per trade, win rate, payoff ratio, expectancy, drawdown, and equity curves." />
   <link rel="canonical" href="https://marblelab.marketmates.com/position-sizing/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://marblelab.marketmates.com/position-sizing/" />
-  <meta property="og:title" content="Position Sizing Game — Trading Risk Simulator" />
+  <meta property="og:title" content="MarketMates Position Sizing Game — Risk Simulator" />
   <meta property="og:description" content="Test how risk per trade, win rate, payoff, and losing streaks shape trading outcomes over a run of trades." />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Position Sizing Game — Trading Risk Simulator" />
+  <meta name="twitter:title" content="MarketMates Position Sizing Game — Risk Simulator" />
   <meta name="twitter:description" content="Test how risk per trade, win rate, payoff, and losing streaks shape trading outcomes over a run of trades." />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "MarketMates Position Sizing Game",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "url": "https://marblelab.marketmates.com/position-sizing/",
+        "description": "A free educational trading risk simulator for testing position sizing, R-multiple outcomes, expectancy, drawdown, and equity curves.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MarketMates"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the MarketMates Position Sizing Game?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It is a free educational trading risk simulator that shows how risk per trade, win rate, payoff ratio, and losing streaks can affect an equity curve."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What does the game teach about position sizing?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The game shows that a positive expectancy system can still suffer painful drawdowns if position size is too aggressive. Smaller risk per trade usually gives the system more room to survive variance."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is the Position Sizing Game financial advice?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. It is an educational simulator only. It uses simplified assumptions and does not predict future trading results."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -24,9 +77,9 @@
 
     <section class="hero">
       <div>
-        <p class="eyebrow">Free community trading-risk simulator</p>
-        <h1>Position Sizing Game</h1>
-        <p class="lede">A small public trading-risk game: the edge is fixed, but your sizing decides whether you compound, crawl, or blow yourself to bits.</p>
+        <p class="eyebrow">Free MarketMates trading-risk simulator</p>
+        <h1>MarketMates Position Sizing Game</h1>
+        <p class="lede">A small public trading-risk game: the edge is fixed, but your position sizing decides whether you compound, crawl, or blow yourself to bits.</p>
       </div>
       <div class="score-card">
         <span>Equity</span>
@@ -129,7 +182,7 @@
     </section>
       <section class="panel explainer" id="about">
       <h2>What is this?</h2>
-      <p>This is a free educational simulator for position sizing. It uses simplified R-multiple outcomes to show why risk per trade can matter more than being right.</p>
+      <p>The MarketMates Position Sizing Game is a free educational simulator for position sizing. It uses simplified R-multiple outcomes to show why risk per trade can matter more than being right.</p>
       <ul>
         <li><strong>Not financial advice.</strong> It is a teaching toy, not a trading system.</li>
         <li><strong>No affiliation implied.</strong> It is inspired by classic position-sizing education, including Van Tharp-style lessons, but is an original simulator.</li>
@@ -138,7 +191,7 @@
     </section>
 
     <footer class="footer">
-      <span>Position Sizing Game</span>
+      <span>MarketMates Position Sizing Game</span>
       <span>Free community edition · MIT licensed · Educational only</span>
     </footer>
   </main>
